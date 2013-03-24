@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="false" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="com.reyco1.physinjector.PhysInjector"/>
+    <classEntry path="com.reyco1.physinjector.events.ContactEvent"/>
+    <classEntry path="com.reyco1.physinjector.contact.ContactListener"/>
+    <classEntry path="com.reyco1.physinjector.factory.BodyFactory"/>
+    <classEntry path="com.reyco1.physinjector.factory.JointFactory"/>
+    <classEntry path="com.reyco1.physinjector.manager.DragManager"/>
+    <classEntry path="com.reyco1.physinjector.data.PhysicsObject"/>
+    <classEntry path="com.reyco1.physinjector.manager.DebugDrawManager"/>
+    <classEntry path="com.reyco1.physinjector.data.PhysicsProperties"/>
+    <classEntry path="com.reyco1.physinjector.events.PhysicsPropertyChangeEvent"/>
+    <classEntry path="com.reyco1.physinjector.geom.Separator"/>
+    <classEntry path="com.reyco1.physinjector.geom.PointSorter"/>
+    <classEntry path="com.reyco1.physinjector.StarlingPhysInjector"/>
+    <classEntry path="com.reyco1.physinjector.plugins.Explosion"/>
+    <classEntry path="com.reyco1.physinjector.plugins.Implosion"/>
+    <classEntry path="com.reyco1.physinjector.plugins.Magnetize"/>
+    <classEntry path="com.reyco1.physinjector.manager.Juggler"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
