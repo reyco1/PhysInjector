@@ -5,8 +5,9 @@ package com.reyco1.physinjector.data
 	
 	import com.reyco1.physinjector.events.PhysicsPropertyChangeEvent;
 	
-	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.geom.Point;
+	import flash.utils.describeType;
 
 	public class PhysicsProperties extends EventDispatcher
 	{
@@ -22,6 +23,8 @@ package com.reyco1.physinjector.data
 		private var _linearDamping:Number  	= 0.2; 
 		private var _linearVelocity:b2Vec2  = new b2Vec2();
 		private var _isDynamic:Boolean 	   	= true;
+		private var _x:Number 				= 0;
+		private var _y:Number 				= 0;
 		
 		// fixture definition
 		private var _density:Number 		= 1.0;
@@ -33,6 +36,7 @@ package com.reyco1.physinjector.data
 		private var _isSensor:Boolean 	 	= false;
 		
 		private var _vertices:Vector.<b2Vec2>;
+		private var _pivot:Point			= new Point();
 		
 		public function PhysicsProperties(quickProps:Object = null)
 		{
@@ -46,6 +50,38 @@ package com.reyco1.physinjector.data
 					}
 				}
 			}
+		}
+		
+		public function clone():PhysicsProperties
+		{
+			var desc:XML = describeType( this );
+			var prop:String;
+			var access:String;
+			var p:PhysicsProperties = new PhysicsProperties();
+			
+			for each( var a:XML in desc.accessor )
+			{
+				prop   = String( a.@name )
+				access = String( a.@access );
+				if ( this.hasOwnProperty( prop ) ) 
+				{
+					if( access == 'readwrite' )
+					{
+						p[prop] = this[ prop ];
+					}
+				}
+			}
+			
+			for each( var v:XML in desc.variable )
+			{
+				prop = String( v.@name );
+				if( this.hasOwnProperty( prop ) )
+				{
+					p[prop] = this[ prop ];
+				}
+			}
+			
+			return p;
 		}
 
 		public function get rotationFixed():Boolean
@@ -245,6 +281,28 @@ package com.reyco1.physinjector.data
 			_maskBits = value;
 			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "maskBits", value, "custom"));
 		}
+		
+		public function get x():Number
+		{
+			return _x;
+		}
+		
+		public function set x(value:Number):void
+		{
+			_x = value;
+			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "x", value, "custom"));
+		}
+		
+		public function get y():Number
+		{
+			return _y;
+		}
+		
+		public function set y(value:Number):void
+		{
+			_y = value;
+			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "y", value, "custom"));
+		}
 
 		public function get vertices():Vector.<b2Vec2>
 		{
@@ -254,6 +312,16 @@ package com.reyco1.physinjector.data
 		public function set vertices(value:Vector.<b2Vec2>):void
 		{
 			_vertices = value;
+		}
+
+		public function get pivot():Point
+		{
+			return _pivot;
+		}
+
+		public function set pivot(value:Point):void
+		{
+			_pivot = value;
 		}
 
 

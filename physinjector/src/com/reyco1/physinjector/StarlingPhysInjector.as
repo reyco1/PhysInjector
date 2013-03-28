@@ -15,9 +15,9 @@ package com.reyco1.physinjector
 			super(stage, gravity, draggingAllowed, debugDraw);
 		}
 		
-		override public function updateBody(bb:b2Body):void
+		override public function updateDisplayObjectPosition(bb:b2Body):void
 		{
-			var sprite:*  = getDisplayObject( bb );
+			var sprite:*  			= getDisplayObject( bb );
 			var newX:Number 		= bb.GetPosition().x * PhysInjector.RATIO;
 			var newY:Number 		= bb.GetPosition().y * PhysInjector.RATIO;
 			var newRotation:Number 	= bb.GetAngle();
@@ -96,7 +96,7 @@ package com.reyco1.physinjector
 			
 			b.SetUserData( po );
 			bodyHash[ displayObj ] = b;
-			updateBody( b );
+			updateDisplayObjectPosition( b );
 			
 			return po;
 		}

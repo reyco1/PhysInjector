@@ -13,8 +13,8 @@ package com.reyco1.physinjector.events
 		public function PhysicsPropertyChangeEvent(type:String, property:String, value:*, host:String = "bodyDef", bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			this.property = property;
-			this.value = value;
-			this.host = host;
+			this.value 	  = value;
+			this.host 	  = host;
 			
 			super(type, bubbles, cancelable);
 		}

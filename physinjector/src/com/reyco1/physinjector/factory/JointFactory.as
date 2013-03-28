@@ -5,6 +5,7 @@ package com.reyco1.physinjector.factory
 	import Box2D.Dynamics.b2Body;
 	
 	import com.reyco1.physinjector.PhysInjector;
+	import com.reyco1.physinjector.manager.Utils;
 	
 	import flash.geom.Point;
 
@@ -22,22 +23,20 @@ package com.reyco1.physinjector.factory
 		
 		public static function createPulleyJoint(body1:b2Body, body2:b2Body, bodyAnchorPoint1:Point, bodyAnchorPoint2:Point, worldAnchorPoint1:Point, worldAnchorPoint2:Point, ratio:Number):b2PulleyJoint
 		{
-			var groundAnchor1:b2Vec2 = new b2Vec2(worldAnchorPoint1.x / PhysInjector.RATIO, worldAnchorPoint1.y / PhysInjector.RATIO);
-			var groundAnchor2:b2Vec2 = new b2Vec2(worldAnchorPoint2.x / PhysInjector.RATIO, worldAnchorPoint2.y / PhysInjector.RATIO);
-			var anchor1:b2Vec2 = new b2Vec2(bodyAnchorPoint1.x / PhysInjector.RATIO, bodyAnchorPoint1.y / PhysInjector.RATIO);
-			var anchor2:b2Vec2 = new b2Vec2(bodyAnchorPoint2.x / PhysInjector.RATIO, bodyAnchorPoint2.y / PhysInjector.RATIO);
+			var groundAnchor1:b2Vec2 = Utils.pointTob2Vec2( worldAnchorPoint1 );
+			var groundAnchor2:b2Vec2 = Utils.pointTob2Vec2( worldAnchorPoint2 );
+			var anchor1:b2Vec2 = Utils.pointTob2Vec2( bodyAnchorPoint1 );
+			var anchor2:b2Vec2 = Utils.pointTob2Vec2( bodyAnchorPoint2 );
 			
 			var jointDef:b2PulleyJointDef = new b2PulleyJointDef();  
 			jointDef.Initialize(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, ratio);
 			
-			var joint:b2PulleyJoint = PhysInjector.WORLD.CreateJoint(jointDef) as b2PulleyJoint;
-			
-			return joint;
+			return PhysInjector.WORLD.CreateJoint(jointDef) as b2PulleyJoint;
 		}
 		
 		public static function createLineJoint(body1:b2Body, body2:b2Body, anchorPoint:Point, axisPoint:Point, lowerTranslation:Number, upperTranslation:Number, collideConnected:Boolean, enableLimit:Boolean):b2LineJoint
 		{
-			var anchor:b2Vec2 = new b2Vec2(anchorPoint.x / PhysInjector.RATIO, anchorPoint.y / PhysInjector.RATIO);
+			var anchor:b2Vec2 = Utils.pointTob2Vec2( anchorPoint );
 			var axis:b2Vec2 = new b2Vec2(axisPoint.x, axisPoint.y);
 			
 			var jointDef:b2LineJointDef = new b2LineJointDef();
@@ -68,7 +67,7 @@ package com.reyco1.physinjector.factory
 		
 		public static function createRevoluteJoint(body1:b2Body, body2:b2Body, anchorPoint:Point, collideConnected:Boolean = false, enableLimit:Boolean = false, angleMin:Number = 0, angleMax:Number = 0):b2RevoluteJoint 
 		{
-			var anchor:b2Vec2 = new b2Vec2(anchorPoint.x / PhysInjector.RATIO, anchorPoint.y / PhysInjector.RATIO);
+			var anchor:b2Vec2 = Utils.pointTob2Vec2( anchorPoint );
 			
 			var jointDef:b2RevoluteJointDef = new b2RevoluteJointDef();
 			jointDef.collideConnected = collideConnected;
@@ -89,7 +88,7 @@ package com.reyco1.physinjector.factory
 		
 		public static function createPrismaticJoint(body1:b2Body, body2:b2Body, anchorPoint:Point, axisPoint:Point, lowerTranslation:Number, upperTranslation:Number, collideConnected:Boolean, enableLimit:Boolean):b2PrismaticJoint 
 		{
-			var anchor:b2Vec2 = new b2Vec2(anchorPoint.x / PhysInjector.RATIO, anchorPoint.y / PhysInjector.RATIO);
+			var anchor:b2Vec2 = Utils.pointTob2Vec2( anchorPoint );
 			var axis:b2Vec2 = new b2Vec2(axisPoint.x, axisPoint.y);
 			
 			var jointDef:b2PrismaticJointDef = new b2PrismaticJointDef();
@@ -106,8 +105,8 @@ package com.reyco1.physinjector.factory
 		
 		public static function createDistanceJoint(body1:b2Body, body2:b2Body, anchorPoint1:Point, anchorPoint2:Point, collideConnected:Boolean):b2DistanceJoint 
 		{
-			var anchor01:b2Vec2 = new b2Vec2(anchorPoint1.x / PhysInjector.RATIO, anchorPoint1.y / PhysInjector.RATIO);
-			var anchor02:b2Vec2 = new b2Vec2(anchorPoint2.x / PhysInjector.RATIO, anchorPoint2.y / PhysInjector.RATIO);
+			var anchor01:b2Vec2 = Utils.pointTob2Vec2( anchorPoint1 );
+			var anchor02:b2Vec2 = Utils.pointTob2Vec2( anchorPoint2 );
 			
 			var jointDef:b2DistanceJointDef = new b2DistanceJointDef();
 			jointDef.collideConnected = collideConnected;

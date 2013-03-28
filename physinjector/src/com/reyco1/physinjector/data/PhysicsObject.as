@@ -4,6 +4,7 @@ package com.reyco1.physinjector.data
 	import Box2D.Common.Math.b2Vec2;
 	import Box2D.Dynamics.b2Body;
 	import Box2D.Dynamics.b2Fixture;
+	import Box2D.Dynamics.b2FixtureDef;
 	
 	import com.reyco1.physinjector.PhysInjector;
 	import com.reyco1.physinjector.events.PhysicsPropertyChangeEvent;
@@ -41,8 +42,7 @@ package com.reyco1.physinjector.data
 
 		public function getDisplayObjectCenterPoint():Point
 		{
-			var localPoint:Point = new Point(_displayObject.x + (_displayObject.width * 0.5), _displayObject.y + (_displayObject.height * 0.5));
-			return _displayObject.parent.localToGlobal( localPoint );
+			return getPointOnDisplayObject(new Point(0.5, 0.5));
 		}
 		
 		public function getPointOnDisplayObject(point:Point):Point
@@ -73,6 +73,8 @@ package com.reyco1.physinjector.data
 					break;
 				
 				case "custom":
+					if(hasOwnProperty(event.property))
+						this[event.property] = event.value;
 					break;
 			}
 			

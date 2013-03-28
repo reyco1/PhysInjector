@@ -10,9 +10,11 @@ package com.reyco1.physinjector
 	import com.reyco1.physinjector.data.PhysicsProperties;
 	import com.reyco1.physinjector.events.ContactEvent;
 	import com.reyco1.physinjector.factory.BodyFactory;
+	import com.reyco1.physinjector.geom.DynamicRegistration;
 	import com.reyco1.physinjector.manager.DebugDrawManager;
 	import com.reyco1.physinjector.manager.DragManager;
 	import com.reyco1.physinjector.manager.Juggler;
+	import com.reyco1.physinjector.manager.Utils;
 	
 	import flash.display.Stage;
 	import flash.events.EventDispatcher;
@@ -20,7 +22,6 @@ package com.reyco1.physinjector
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
 	/**
@@ -33,10 +34,10 @@ package com.reyco1.physinjector
 		public static const SQUARE:int   = 0;
 		public static const CIRCLE:int   = 1;
 		public static const POLYGON:int  = 2;
-		public static const RATIO:Number = 50;
+		public static var   RATIO:Number = 70;
 		
 		public static var WORLD:b2World;
-		public static var REGISTRATION:Point =  new Point(0.5, 0.5);
+		public static var REGISTRATION_RATIO:Point =  new Point(0.5, 0.5);
 		
 		protected var defaultGravity:b2Vec2;
 		protected var contacts:ContactListener;
@@ -65,7 +66,7 @@ package com.reyco1.physinjector
 		 */		
 		public function PhysInjector(stage:Stage, gravity:b2Vec2 = null, draggingAllowed:Boolean = false, debugDraw:* = null)
 		{
-			defaultGravity 	     = gravity ? gravity : new b2Vec2(0.0, 10);
+			defaultGravity 	     = gravity ? gravity : new b2Vec2(0.0, 40);
 			this.draggingAllowed = draggingAllowed;
 			this.stage		  	 = stage;
 			
@@ -103,83 +104,68 @@ package com.reyco1.physinjector
 		 */		
 		public function injectPhysics(displayObj:*, type:int, properties:PhysicsProperties = null):PhysicsObject
 		{
-			var b:b2Body;
-			var globalPosition:Point;
-			var currentRotation:Number;
-			var bounds:Rectangle;
+			var currentRotation:Number 	= 0;
+			var po:PhysicsObject		= null;
+			var globalCenter:Point		= null;
+			var b:b2Body				= null;
 			
-			var offsetX:Number = displayObj.width  * -REGISTRATION.x;
-			var offsetY:Number = displayObj.height * -REGISTRATION.y;
+			if(displayObj.rotation != 0)
+			{
+				currentRotation = displayObj.rotation
+				displayObj.rotation = 0;
+			}
+			
+			if(!properties)
+				properties = new PhysicsProperties();
+			
+			properties.pivot = DynamicRegistration.getRegistrationOffset( displayObj, REGISTRATION_RATIO );
+			properties.angle = Utils.degreesToRadians( currentRotation );
+			
+			globalCenter = DynamicRegistration.getGlobalDisplayObjectCenter( displayObj );
 			
 			switch(type)
 			{
 				case CIRCLE:
-				{
-					globalPosition = displayObj.parent.localToGlobal(new Point(displayObj.x, displayObj.y));
-					
 					b = createCircle
 					(
-						globalPosition.x + (displayObj.width  * REGISTRATION.x), 
-						globalPosition.y + (displayObj.height * REGISTRATION.y), 
-						displayObj.width * 0.5, properties
+						globalCenter.x, 
+						globalCenter.y, 
+						displayObj.width * 0.5, 
+						properties
 					);
 					break;
-				}
-					
+				
 				case SQUARE:
-				{
-					currentRotation 	= displayObj.rotation;
-					bounds				= displayObj.getBounds(displayObj.parent);
-					displayObj.rotation = 0;
-					
-					globalPosition = displayObj.parent.localToGlobal(new Point(bounds.x, bounds.y));
-					
-					properties.angle = currentRotation * Math.PI / 180;
-					
 					b = createSquare
 					(						
-						globalPosition.x + (bounds.width  * REGISTRATION.x), 
-						globalPosition.y + (bounds.height * REGISTRATION.y),
+						globalCenter.x, 
+						globalCenter.y,
 						displayObj.width, 
 						displayObj.height, 
 						properties
 					);
 					break;
-				}
-					
+				
 				case POLYGON:
-				{
-					currentRotation 	= displayObj.rotation;
-					bounds				= displayObj.getBounds(displayObj.parent);
-					displayObj.rotation = 0;					
-					globalPosition 		= displayObj.parent.localToGlobal(new Point(bounds.x, bounds.y));
-					properties.angle 	= currentRotation * Math.PI / 180;
+					properties.pivot = new Point(properties.pivot.x / RATIO, properties.pivot.y / RATIO);
 					
-					offsetX = (displayObj.width  * -REGISTRATION.x) / RATIO+2;
-					offsetY = (displayObj.height * -REGISTRATION.y) / RATIO+2;
-					
-					b = createPolygon( globalPosition.x + (bounds.width  * REGISTRATION.x), 
-									   globalPosition.y + (bounds.height * REGISTRATION.y),
-									   properties.vertices, properties );
-					
+					b = createPolygon
+					( 
+						globalCenter.x, 
+						globalCenter.y,
+						properties.vertices, 
+						properties 
+					);
 					break;
-				}
-					
-				default:
-				{
-					break;
-				}
 			}
 			
-			var po:PhysicsObject = new PhysicsObject(b, displayObj, properties)
-			po.offsetX = offsetX;
-			po.offsetY = offsetY;
-			po.name	   = displayObj.name;
+			po = new PhysicsObject(b, displayObj, properties);
+			po.name	= displayObj.name;
 			
 			b.SetUserData( po );
 			bodyHash[ displayObj ] = b;
-			updateBody( b );
-				
+			updateDisplayObjectPosition( b );
+			
 			return po;
 		}
 		
@@ -210,38 +196,18 @@ package com.reyco1.physinjector
 		 * @param body
 		 * 
 		 */		
-		public function updateBody(body:b2Body):void
+		public function updateDisplayObjectPosition(body:b2Body):void
 		{
-			var displayObject:* 	= getDisplayObject( body );
-			var localPosition:Point = displayObject.parent.globalToLocal(new Point(body.GetPosition().x * RATIO, body.GetPosition().y * RATIO));			
+			var physObject:PhysicsObject = PhysicsObject( body.GetUserData() ) as PhysicsObject;
+			var displayObject:* 	= physObject.displayObject;
+			var localPosition:Point = Utils.b2Vec2ToPoint( body.GetPosition() );
 			var newX:Number 		= localPosition.x;
 			var newY:Number 		= localPosition.y;
-			var newRotation:Number 	= body.GetAngle();
+			var newRotation:Number 	= Utils.radiansToDegrees( body.GetAngle() );
 			
-			var matrix:Matrix = displayObject.transform.matrix;
-			matrix = applyTransformation
-				(
-					newX, 
-					newY, 
-					PhysicsObject( body.GetUserData() ).offsetX, 
-					PhysicsObject( body.GetUserData() ).offsetY, 
-					newRotation, 
-					displayObject.scaleX, 
-					displayObject.scaleY
-				);	
-			
-			displayObject.transform.matrix = matrix;
-		}
-		
-		private function applyTransformation(x:Number, y:Number, offsetX:Number, offsetY:Number, rotation:Number, scaleX:Number, scaleY:Number):Matrix 
-		{
-			var matrix:Matrix = new Matrix();
-			matrix.scale(scaleX, scaleY);
-			matrix.translate(offsetX, offsetY);
-			matrix.rotate(rotation);
-			matrix.translate(x, y);
-			return matrix;
-		}		
+			DynamicRegistration.move(displayObject, physObject.physicsProperties.pivot, newX, newY)
+			DynamicRegistration.rotate(displayObject, physObject.physicsProperties.pivot, newRotation);			
+		}	
 		
 		/* CREATIONAL */
 		
@@ -460,14 +426,21 @@ package com.reyco1.physinjector
 		public function update():void
 		{			
 			WORLD.Step(1 / stage.frameRate, 10, 10);
-			WORLD.ClearForces();	
+			WORLD.ClearForces();			
+			
+			while(jointDestroyQueue.length > 0)
+			{
+				destroyJoint( jointDestroyQueue.splice(0, 1)[0] );
+			}
 			
 			while(bodyDestroyQueue.length > 0)
 			{
 				var b:b2Body = bodyDestroyQueue.splice(0, 1)[0];
 				delete bodyHash[ PhysicsObject( b.GetUserData() ).displayObject ];
+				
 				PhysicsObject( b.GetUserData() ).dispose();
 				destroyBody( bodies.splice(bodies.indexOf( b ), 1)[0] );
+				
 				b = null;
 			}
 			
@@ -478,13 +451,8 @@ package com.reyco1.physinjector
 			{
 				if(bodies[a].GetType() == b2Body.b2_dynamicBody && bodies[a].GetUserData() != null)
 				{
-					updateBody( bodies[a] );
+					updateDisplayObjectPosition( bodies[a] );
 				}
-			}
-			
-			while(jointDestroyQueue.length > 0)
-			{
-				destroyJoint( jointDestroyQueue.splice(0, 1)[0] );
 			}
 			
 			if(debugDrawManager)
