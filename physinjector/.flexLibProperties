@@ -20,6 +20,7 @@
     <classEntry path="com.reyco1.physinjector.manager.Juggler"/>
     <classEntry path="com.reyco1.physinjector.data.Definitions"/>
     <classEntry path="com.reyco1.physinjector.manager.Utils"/>
+    <classEntry path="com.reyco1.physinjector.contact.ContactManager"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

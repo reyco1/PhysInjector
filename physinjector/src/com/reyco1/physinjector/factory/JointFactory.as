@@ -86,7 +86,7 @@ package com.reyco1.physinjector.factory
 			return joint;
 		}
 		
-		public static function createPrismaticJoint(body1:b2Body, body2:b2Body, anchorPoint:Point, axisPoint:Point, lowerTranslation:Number, upperTranslation:Number, collideConnected:Boolean, enableLimit:Boolean):b2PrismaticJoint 
+		public static function createPrismaticJoint(body1:b2Body, body2:b2Body, anchorPoint:Point, axisPoint:Point, lowerTranslation:Number, upperTranslation:Number, collideConnected:Boolean, enableLimit:Boolean, enableMotor:Boolean = false):b2PrismaticJoint 
 		{
 			var anchor:b2Vec2 = Utils.pointTob2Vec2( anchorPoint );
 			var axis:b2Vec2 = new b2Vec2(axisPoint.x, axisPoint.y);
@@ -96,6 +96,7 @@ package com.reyco1.physinjector.factory
 			jointDef.upperTranslation = upperTranslation / PhysInjector.RATIO;
 			jointDef.collideConnected = collideConnected;
 			jointDef.enableLimit = enableLimit;
+			jointDef.enableMotor = enableMotor;
 			jointDef.Initialize(body1, body2, anchor, axis);
 			
 			var joint:b2PrismaticJoint = PhysInjector.WORLD.CreateJoint(jointDef) as b2PrismaticJoint;

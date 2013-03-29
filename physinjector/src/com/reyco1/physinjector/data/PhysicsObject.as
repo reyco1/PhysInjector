@@ -4,7 +4,6 @@ package com.reyco1.physinjector.data
 	import Box2D.Common.Math.b2Vec2;
 	import Box2D.Dynamics.b2Body;
 	import Box2D.Dynamics.b2Fixture;
-	import Box2D.Dynamics.b2FixtureDef;
 	
 	import com.reyco1.physinjector.PhysInjector;
 	import com.reyco1.physinjector.events.PhysicsPropertyChangeEvent;

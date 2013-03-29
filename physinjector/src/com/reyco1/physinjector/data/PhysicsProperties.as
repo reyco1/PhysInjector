@@ -36,6 +36,7 @@ package com.reyco1.physinjector.data
 		private var _isSensor:Boolean 	 	= false;
 		
 		private var _vertices:Vector.<b2Vec2>;
+		private var _name:String;
 		private var _pivot:Point			= new Point();
 		
 		public function PhysicsProperties(quickProps:Object = null)
@@ -322,6 +323,16 @@ package com.reyco1.physinjector.data
 		public function set pivot(value:Point):void
 		{
 			_pivot = value;
+		}
+
+		public function get name():String
+		{
+			return _name;
+		}
+
+		public function set name(value:String):void
+		{
+			_name = value;
 		}
 
 

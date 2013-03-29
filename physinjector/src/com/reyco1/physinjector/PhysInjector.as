@@ -6,6 +6,7 @@ package com.reyco1.physinjector
 	import Box2D.Dynamics.b2World;
 	
 	import com.reyco1.physinjector.contact.ContactListener;
+	import com.reyco1.physinjector.contact.ContactManager;
 	import com.reyco1.physinjector.data.PhysicsObject;
 	import com.reyco1.physinjector.data.PhysicsProperties;
 	import com.reyco1.physinjector.events.ContactEvent;
@@ -20,7 +21,6 @@ package com.reyco1.physinjector
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
-	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
@@ -75,14 +75,8 @@ package com.reyco1.physinjector
 			joints			  = new Vector.<b2Joint>();
 			bodyDestroyQueue  = new Vector.<b2Body>();
 			jointDestroyQueue = new Vector.<b2Joint>();
-			contacts  		  = new ContactListener();	
 			dragManager		  = new DragManager(stage);
 			WORLD	  		  = new b2World( defaultGravity, true );
-			
-			contacts.dispatcher.addEventListener( ContactEvent.BEGIN_CONTACT, handleContactBegin);
-			contacts.dispatcher.addEventListener( ContactEvent.END_CONTACT,   handleContactEnd);
-			
-			WORLD.SetContactListener( contacts );			
 			
 			allowDrag = draggingAllowed;
 			
@@ -92,6 +86,8 @@ package com.reyco1.physinjector
 			}
 			
 			juggler = new Juggler();
+			
+			ContactManager.init(this);
 		}
 		
 		/**
@@ -160,7 +156,7 @@ package com.reyco1.physinjector
 			}
 			
 			po = new PhysicsObject(b, displayObj, properties);
-			po.name	= displayObj.name;
+			po.name = properties.name;
 			
 			b.SetUserData( po );
 			bodyHash[ displayObj ] = b;
@@ -199,11 +195,11 @@ package com.reyco1.physinjector
 		public function updateDisplayObjectPosition(body:b2Body):void
 		{
 			var physObject:PhysicsObject = PhysicsObject( body.GetUserData() ) as PhysicsObject;
-			var displayObject:* 	= physObject.displayObject;
-			var localPosition:Point = Utils.b2Vec2ToPoint( body.GetPosition() );
-			var newX:Number 		= localPosition.x;
-			var newY:Number 		= localPosition.y;
-			var newRotation:Number 	= Utils.radiansToDegrees( body.GetAngle() );
+			var displayObject:* 		 = physObject.displayObject;
+			var localPosition:Point 	 = Utils.b2Vec2ToPoint( body.GetPosition() );
+			var newX:Number 			 = localPosition.x;
+			var newY:Number 			 = localPosition.y;
+			var newRotation:Number 		 = Utils.radiansToDegrees( body.GetAngle() );
 			
 			DynamicRegistration.move(displayObject, physObject.physicsProperties.pivot, newX, newY)
 			DynamicRegistration.rotate(displayObject, physObject.physicsProperties.pivot, newRotation);			
@@ -309,7 +305,7 @@ package com.reyco1.physinjector
 		/**
 		 * Returns the PhysicsObject instance associated with the supplied display object 
 		 * @param displayObject
-		 * @return 
+		 * @return PhysicsObject
 		 * 
 		 */		
 		public function getPhysicsObject(displayObject:*):PhysicsObject
@@ -326,6 +322,22 @@ package com.reyco1.physinjector
 		public function getDisplayObject(body:b2Body):*
 		{
 			return PhysicsObject(body.GetUserData()).displayObject;
+		}
+		
+		/**
+		 * 
+		 * @param name Returns a PhysicsObject based on the name provided. If the name of the display ogject or physics object is matched.
+		 * @return PhysicsObject
+		 * 
+		 */		
+		public function getPhysicsObjectByName(name:String):PhysicsObject
+		{
+			for (var displayObject:* in bodyHash)
+			{
+				if(displayObject.name == name || getPhysicsObject(displayObject).name == name)
+					return getPhysicsObject(displayObject);
+			}
+			return null;
 		}
 		
 		/**
@@ -359,20 +371,6 @@ package com.reyco1.physinjector
 			defaultGravity.x = x;
 			defaultGravity.y = y;
 			WORLD.SetGravity( defaultGravity );
-		}
-		
-		/* CONTACT */
-		
-		protected function handleContactBegin(event:ContactEvent):void
-		{
-			if(onContactBegin != null)
-				onContactBegin.apply(null, [event.bodyA, event.bodyB, event.fixtureA, event.fixtureB]);
-		}
-		
-		protected function handleContactEnd(event:ContactEvent):void
-		{
-			if(onContactEnd != null)
-				onContactEnd.apply(null, [event.bodyA, event.bodyB, event.fixtureA, event.fixtureB]);
 		}
 		
 		/* CLEAR */
