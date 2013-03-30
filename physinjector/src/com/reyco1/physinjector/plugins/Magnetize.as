@@ -19,7 +19,7 @@ package com.reyco1.physinjector.plugins
 		{
 			this.injector 	= injector;
 			this.intensity	= intensity;
-			this.coverage	= coverage / PhysInjector.RATIO;
+			this.coverage	= coverage / PhysInjector.WORLD_SCALE;
 			subscribers 	= new Vector.<b2Body>();
 			mainBody 		= injector.getBody( displayObject );			
 			

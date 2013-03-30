@@ -32,8 +32,8 @@ package com.reyco1.physinjector.manager
 		
 		public function startDrag(e:MouseEvent = null):void
 		{
-			mouseXWorldPhys = stage.mouseX / PhysInjector.RATIO;
-			mouseYWorldPhys = stage.mouseY / PhysInjector.RATIO;	
+			mouseXWorldPhys = stage.mouseX / PhysInjector.WORLD_SCALE;
+			mouseYWorldPhys = stage.mouseY / PhysInjector.WORLD_SCALE;	
 			
 			var body:b2Body = getBodyAtMouse();
 			
@@ -50,8 +50,8 @@ package com.reyco1.physinjector.manager
 		{
 			if(mouseJoint)
 			{
-				mouseXWorldPhys = stage.mouseX / PhysInjector.RATIO;
-				mouseYWorldPhys = stage.mouseY / PhysInjector.RATIO;
+				mouseXWorldPhys = stage.mouseX / PhysInjector.WORLD_SCALE;
+				mouseYWorldPhys = stage.mouseY / PhysInjector.WORLD_SCALE;
 				
 				var p2:b2Vec2 = new b2Vec2(mouseXWorldPhys, mouseYWorldPhys);
 				mouseJoint.SetTarget(p2);

@@ -19,10 +19,10 @@ package com.reyco1.physinjector.plugins
 		{
 			for (var a:int = 0; a < injector.bodies.length; a++) 
 			{
-				var expOrigen:b2Vec2 = new b2Vec2(x/PhysInjector.RATIO, y/PhysInjector.RATIO);
+				var expOrigen:b2Vec2 = new b2Vec2(x/PhysInjector.WORLD_SCALE, y/PhysInjector.WORLD_SCALE);
 				var bodyPosition:b2Vec2 = injector.bodies[a].GetPosition();
 				
-				var maxDistance:Number = coverage / PhysInjector.RATIO;
+				var maxDistance:Number = coverage / PhysInjector.WORLD_SCALE;
 				var maxForce:int = impulseForce;
 				var distance:Number;
 				var strength:Number;

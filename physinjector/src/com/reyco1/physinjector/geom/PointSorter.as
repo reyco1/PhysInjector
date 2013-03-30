@@ -35,7 +35,7 @@ package com.reyco1.physinjector.geom
 			points[id] = new Vector.<b2Vec2>();
 			for (var a:int = 0; a < array.length; a++) 
 			{
-				points[id].push(new b2Vec2(array[a].x / PhysInjector.RATIO, array[a].y / PhysInjector.RATIO));
+				points[id].push(new b2Vec2(array[a].x / PhysInjector.WORLD_SCALE, array[a].y / PhysInjector.WORLD_SCALE));
 			}
 			return points[id];
 		}

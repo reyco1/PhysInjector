@@ -40,8 +40,8 @@ package com.reyco1.physinjector.factory
 			var axis:b2Vec2 = new b2Vec2(axisPoint.x, axisPoint.y);
 			
 			var jointDef:b2LineJointDef = new b2LineJointDef();
-			jointDef.lowerTranslation = lowerTranslation / PhysInjector.RATIO;
-			jointDef.upperTranslation = upperTranslation / PhysInjector.RATIO;
+			jointDef.lowerTranslation = lowerTranslation / PhysInjector.WORLD_SCALE;
+			jointDef.upperTranslation = upperTranslation / PhysInjector.WORLD_SCALE;
 			jointDef.collideConnected = collideConnected;
 			jointDef.enableLimit = enableLimit;
 			jointDef.Initialize(body1, body2, anchor, axis);
@@ -92,8 +92,8 @@ package com.reyco1.physinjector.factory
 			var axis:b2Vec2 = new b2Vec2(axisPoint.x, axisPoint.y);
 			
 			var jointDef:b2PrismaticJointDef = new b2PrismaticJointDef();
-			jointDef.lowerTranslation = lowerTranslation / PhysInjector.RATIO;
-			jointDef.upperTranslation = upperTranslation / PhysInjector.RATIO;
+			jointDef.lowerTranslation = lowerTranslation / PhysInjector.WORLD_SCALE;
+			jointDef.upperTranslation = upperTranslation / PhysInjector.WORLD_SCALE;
 			jointDef.collideConnected = collideConnected;
 			jointDef.enableLimit = enableLimit;
 			jointDef.enableMotor = enableMotor;

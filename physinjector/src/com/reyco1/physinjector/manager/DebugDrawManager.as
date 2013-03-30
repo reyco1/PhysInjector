@@ -14,7 +14,7 @@ package com.reyco1.physinjector.manager
 		{
 			var dbgDraw:b2DebugDraw = new b2DebugDraw();
 			dbgDraw.SetSprite(drawContainer);
-			dbgDraw.SetDrawScale(PhysInjector.RATIO);
+			dbgDraw.SetDrawScale(PhysInjector.WORLD_SCALE);
 			dbgDraw.SetFillAlpha(fillAlpha);
 			dbgDraw.SetLineThickness(lineThickness);
 			dbgDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit); // | b2DebugDraw.e_centerOfMassBit
@@ -26,6 +26,7 @@ package com.reyco1.physinjector.manager
 		public function update():void
 		{
 			PhysInjector.WORLD.DrawDebugData();
+			debugSprite.parent.setChildIndex(debugSprite, debugSprite.parent.numChildren-1);
 		}
 		
 		public function dispose():void

@@ -18,8 +18,8 @@ package com.reyco1.physinjector
 		override public function updateDisplayObjectPosition(bb:b2Body):void
 		{
 			var sprite:*  			= getDisplayObject( bb );
-			var newX:Number 		= bb.GetPosition().x * PhysInjector.RATIO;
-			var newY:Number 		= bb.GetPosition().y * PhysInjector.RATIO;
+			var newX:Number 		= bb.GetPosition().x * PhysInjector.WORLD_SCALE;
+			var newY:Number 		= bb.GetPosition().y * PhysInjector.WORLD_SCALE;
 			var newRotation:Number 	= bb.GetAngle();
 			
 			sprite.x = newX;

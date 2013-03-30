@@ -31,10 +31,11 @@ package com.reyco1.physinjector
 	 */	
 	public class PhysInjector extends EventDispatcher implements IEventDispatcher
 	{
+		public static var   WORLD_SCALE:Number = 70;
+		
 		public static const SQUARE:int   = 0;
 		public static const CIRCLE:int   = 1;
 		public static const POLYGON:int  = 2;
-		public static var   RATIO:Number = 70;
 		
 		public static var WORLD:b2World;
 		public static var REGISTRATION_RATIO:Point =  new Point(0.5, 0.5);
@@ -143,7 +144,7 @@ package com.reyco1.physinjector
 					break;
 				
 				case POLYGON:
-					properties.pivot = new Point(properties.pivot.x / RATIO, properties.pivot.y / RATIO);
+					properties.pivot = new Point(properties.pivot.x / WORLD_SCALE, properties.pivot.y / WORLD_SCALE);
 					
 					b = createPolygon
 					( 

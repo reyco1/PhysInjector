@@ -53,7 +53,7 @@ package com.reyco1.physinjector.data
 		public function move(x:Number, y:Number):void
 		{
 			var localPoint:Point = _displayObject.parent.localToGlobal( new Point(x, y) );
-			loc = new b2Vec2(localPoint.x/PhysInjector.RATIO, (localPoint.y/PhysInjector.RATIO));
+			loc = new b2Vec2(localPoint.x/PhysInjector.WORLD_SCALE, (localPoint.y/PhysInjector.WORLD_SCALE));
 			body.SetPosition(loc);
 		}
 		
@@ -115,7 +115,7 @@ package com.reyco1.physinjector.data
 
 		public function get y():Number
 		{
-			_y = body.GetPosition().y * PhysInjector.RATIO;
+			_y = body.GetPosition().y * PhysInjector.WORLD_SCALE;
 			return _y;
 		}
 
@@ -123,13 +123,13 @@ package com.reyco1.physinjector.data
 		{
 			_y = value;
 			loc = body.GetPosition();
-			loc.y = value / PhysInjector.RATIO;
+			loc.y = value / PhysInjector.WORLD_SCALE;
 			body.SetPosition( loc );
 		}
 
 		public function get x():Number
 		{
-			_x = body.GetPosition().x * PhysInjector.RATIO;
+			_x = body.GetPosition().x * PhysInjector.WORLD_SCALE;
 			return _x;
 		}
 
@@ -137,7 +137,7 @@ package com.reyco1.physinjector.data
 		{
 			_x = value;
 			loc = body.GetPosition();
-			loc.x = value / PhysInjector.RATIO;
+			loc.x = value / PhysInjector.WORLD_SCALE;
 			body.SetPosition( loc );
 		}
 
