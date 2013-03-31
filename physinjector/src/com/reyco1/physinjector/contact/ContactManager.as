@@ -1,6 +1,7 @@
 package com.reyco1.physinjector.contact
 {
 	import com.reyco1.physinjector.PhysInjector;
+	import com.reyco1.physinjector.data.PhysicsObject;
 	import com.reyco1.physinjector.events.ContactEvent;
 	
 	import flash.utils.Dictionary;
@@ -48,66 +49,110 @@ package com.reyco1.physinjector.contact
 			contacts		= null;
 		}
 		
-		public static function onContactBegin(objectNameA:String, objectNameB:String, handler:Function):void
+		/* listen methods */		
+		
+		public static function onContactBegin(nameOrGroupA:String, nameOrGroupB:String, handler:Function, isGroupListener:Boolean = false):void
 		{
-			onBeginObjects[objectNameA+objectNameB] = new ContactData(injector.getPhysicsObjectByName(objectNameA), injector.getPhysicsObjectByName(objectNameB), handler);
+			if(!isGroupListener)
+				onBeginObjects[nameOrGroupA+nameOrGroupB] = new ContactData(injector.getPhysicsObjectByName(nameOrGroupA), injector.getPhysicsObjectByName(nameOrGroupB), handler, isGroupListener);
+			else
+				onBeginObjects[nameOrGroupA+nameOrGroupB] = new ContactData(nameOrGroupA, nameOrGroupB, handler, isGroupListener);
 		}
 		
-		public static function onContactEnd(objectNameA:String, objectNameB:String, handler:Function):void
+		public static function onContactEnd(nameOrGroupA:String, nameOrGroupB:String, handler:Function, isGroupListener:Boolean = false):void
 		{
-			onEndObjects[objectNameA+objectNameB] = new ContactData(injector.getPhysicsObjectByName(objectNameA), injector.getPhysicsObjectByName(objectNameB), handler);
+			if(!isGroupListener)
+				onEndObjects[nameOrGroupA+nameOrGroupB] = new ContactData(injector.getPhysicsObjectByName(nameOrGroupA), injector.getPhysicsObjectByName(nameOrGroupB), handler, isGroupListener);
+			else
+				onBeginObjects[nameOrGroupA+nameOrGroupB] = new ContactData(nameOrGroupA, nameOrGroupB, handler, isGroupListener);
 		}
 		
-		public static function onPreSolve(objectNameA:String, objectNameB:String, handler:Function):void
+		public static function onPreSolve(nameOrGroupA:String, nameOrGroupB:String, handler:Function, isGroupListener:Boolean = false):void
 		{
-			onPreObjects[objectNameA+objectNameB] = new ContactData(injector.getPhysicsObjectByName(objectNameA), injector.getPhysicsObjectByName(objectNameB), handler);
+			if(!isGroupListener)
+				onPreObjects[nameOrGroupA+nameOrGroupB] = new ContactData(injector.getPhysicsObjectByName(nameOrGroupA), injector.getPhysicsObjectByName(nameOrGroupB), handler, isGroupListener);
+			else
+				onBeginObjects[nameOrGroupA+nameOrGroupB] = new ContactData(nameOrGroupA, nameOrGroupB, handler, isGroupListener);
 		}
 		
-		public static function onPostSolve(objectNameA:String, objectNameB:String, handler:Function):void
+		public static function onPostSolve(nameOrGroupA:String, nameOrGroupB:String, handler:Function, isGroupListener:Boolean = false):void
 		{
-			onPostObjects[objectNameA+objectNameB] = new ContactData(injector.getPhysicsObjectByName(objectNameA), injector.getPhysicsObjectByName(objectNameB), handler);
+			if(!isGroupListener)
+				onPostObjects[nameOrGroupA+nameOrGroupB] = new ContactData(injector.getPhysicsObjectByName(nameOrGroupA), injector.getPhysicsObjectByName(nameOrGroupB), handler, isGroupListener);
+			else
+				onBeginObjects[nameOrGroupA+nameOrGroupB] = new ContactData(nameOrGroupA, nameOrGroupB, handler, isGroupListener);
+		}		
+		
+		/* remove listen methods */
+		
+		public static function removeContactBegin(nameOrGroupA:String, nameOrGroupB:String, handler:Function):void
+		{
+			delete onBeginObjects[nameOrGroupA+nameOrGroupB];
 		}
+		
+		public static function removeContactEnd(nameOrGroupA:String, nameOrGroupB:String, handler:Function):void
+		{
+			delete onEndObjects[nameOrGroupA+nameOrGroupB];
+		}
+		
+		public static function removePreSolve(nameOrGroupA:String, nameOrGroupB:String, handler:Function):void
+		{
+			delete onPreObjects[nameOrGroupA+nameOrGroupB];
+		}
+		
+		public static function removePostSolve(nameOrGroupA:String, nameOrGroupB:String, handler:Function):void
+		{
+			delete onPostObjects[nameOrGroupA+nameOrGroupB];
+		}
+		
+		/* handler methods */
 		
 		protected static function handleContactBegin(event:ContactEvent):void
 		{
-			for each (var contactData:ContactData in onBeginObjects)
-			{
-				if(contactData.objectA.body == event.bodyA && contactData.objectB.body == event.bodyB || contactData.objectA.body == event.bodyB && contactData.objectB.body == event.bodyA)
-				{
-					contactData.handler.call(null, contactData.objectA, contactData.objectB, event.contact);
-				}
-			}
+			evaluate(onBeginObjects, event);
 		}
 		
 		protected static function handlePostSolve(event:ContactEvent):void
 		{
-			for each (var contactData:ContactData in onPostObjects)
-			{
-				if(contactData.objectA.body == event.bodyA && contactData.objectB.body == event.bodyB || contactData.objectA.body == event.bodyB && contactData.objectB.body == event.bodyA)
-				{
-					contactData.handler.call(null, contactData.objectA, contactData.objectB, event.contact);
-				}
-			}
+			evaluate(onPostObjects, event);
 		}
 		
 		protected static function handlePreSolve(event:ContactEvent):void
 		{
-			for each (var contactData:ContactData in onPreObjects)
-			{
-				if(contactData.objectA.body == event.bodyA && contactData.objectB.body == event.bodyB || contactData.objectA.body == event.bodyB && contactData.objectB.body == event.bodyA)
-				{
-					contactData.handler.call(null, contactData.objectA, contactData.objectB, event.contact);
-				}
-			}
+			evaluate(onPreObjects, event);
 		}
 		
 		protected static function handleContactEnd(event:ContactEvent):void
 		{
-			for each (var contactData:ContactData in onEndObjects)
+			evaluate(onEndObjects, event);
+		}
+		
+		/* evaluate  */
+		
+		private static function evaluate(dictionary:Dictionary, event:ContactEvent):void
+		{
+			for each (var contactData:ContactData in dictionary)
 			{
-				if(contactData.objectA.body == event.bodyA && contactData.objectB.body == event.bodyB || contactData.objectA.body == event.bodyB && contactData.objectB.body == event.bodyA)
+				if(!contactData.isGroupListener)
 				{
-					contactData.handler.call(null, contactData.objectA, contactData.objectB, event.contact);
+					if(contactData.groupOrObjectA.body == event.bodyA && contactData.groupOrObjectB.body == event.bodyB || contactData.groupOrObjectA.body == event.bodyB && contactData.groupOrObjectB.body == event.bodyA)
+					{
+						contactData.handler.call(null, contactData.groupOrObjectA, contactData.groupOrObjectB, event.contact);
+					}
+				}
+				else
+				{
+					if(contactData.groupOrObjectA == PhysicsObject(event.bodyA.GetUserData()).physicsProperties.contactGroup && 
+					   contactData.groupOrObjectB == PhysicsObject(event.bodyB.GetUserData()).physicsProperties.contactGroup)
+					{
+						contactData.handler.call(null, PhysicsObject(event.bodyA.GetUserData()), PhysicsObject(event.bodyB.GetUserData()), event.contact);
+					}
+					else if(
+						contactData.groupOrObjectA == PhysicsObject(event.bodyB.GetUserData()).physicsProperties.contactGroup &&
+						contactData.groupOrObjectB == PhysicsObject(event.bodyA.GetUserData()).physicsProperties.contactGroup)
+					{
+						contactData.handler.call(null, PhysicsObject(event.bodyB.GetUserData()), PhysicsObject(event.bodyA.GetUserData()), event.contact);
+					}
 				}
 			}
 		}
@@ -118,14 +163,16 @@ import com.reyco1.physinjector.data.PhysicsObject;
 
 class ContactData
 {
-	public var objectA:PhysicsObject;
-	public var objectB:PhysicsObject;
+	public var groupOrObjectA:*;
+	public var groupOrObjectB:*;
 	public var handler:Function;
+	public var isGroupListener:Boolean;
 	
-	public function ContactData(objectA:PhysicsObject, objectB:PhysicsObject, handler:Function)
+	public function ContactData(groupOrObjectA:*, groupOrObjectB:*, handler:Function, isGroupListener:Boolean)
 	{
-		this.objectA = objectA;
-		this.objectB = objectB;
-		this.handler = handler;
+		this.groupOrObjectA  = groupOrObjectA;
+		this.groupOrObjectB  = groupOrObjectB;
+		this.isGroupListener = isGroupListener;
+		this.handler 		 = handler;
 	}
 }

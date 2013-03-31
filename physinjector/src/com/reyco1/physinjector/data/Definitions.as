@@ -32,6 +32,7 @@ package com.reyco1.physinjector.data
 			fixtureDef.density 		    	= properties.density;
 			fixtureDef.friction 			= properties.friction;
 			fixtureDef.restitution 	    	= properties.restitution;
+			fixtureDef.filter.groupIndex	= properties.groupIndex;
 			fixtureDef.filter.categoryBits 	= properties.categoryBits;
 			fixtureDef.filter.maskBits 		= properties.maskBits;
 			fixtureDef.isSensor				= properties.isSensor;

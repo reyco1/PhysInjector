@@ -28,15 +28,17 @@ package com.reyco1.physinjector.data
 		
 		// fixture definition
 		private var _density:Number 		= 1.0;
-		private var _friction:Number 		= 0.5;
+		private var _friction:Number 		= 0.2;
 		private var _restitution:Number 	= 0.2;		
-		private var _maskBits:uint 		 	= 0x0002;
-		private var _categoryBits:uint 	 	= 0x0002;
+		private var _maskBits:uint 		 	= 0xFFFF;
+		private var _categoryBits:uint 	 	= 0x0001;
+		private var _groupIndex:Number		= 0;
 		private var _isDraggable:Boolean 	= true;		
 		private var _isSensor:Boolean 	 	= false;
 		
 		private var _vertices:Vector.<b2Vec2>;
 		private var _name:String;
+		private var _contactGroup:String	= "none";
 		private var _pivot:Point			= new Point();
 		
 		public function PhysicsProperties(quickProps:Object = null)
@@ -333,6 +335,26 @@ package com.reyco1.physinjector.data
 		public function set name(value:String):void
 		{
 			_name = value;
+		}
+
+		public function get groupIndex():Number
+		{
+			return _groupIndex;
+		}
+
+		public function set groupIndex(value:Number):void
+		{
+			_groupIndex = value;
+		}
+
+		public function get contactGroup():String
+		{
+			return _contactGroup;
+		}
+
+		public function set contactGroup(value:String):void
+		{
+			_contactGroup = value;
 		}
 
 
