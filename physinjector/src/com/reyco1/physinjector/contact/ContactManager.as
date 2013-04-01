@@ -135,15 +135,17 @@ package com.reyco1.physinjector.contact
 			{
 				if(!contactData.isGroupListener)
 				{
-					if(contactData.groupOrObjectA.body == event.bodyA && contactData.groupOrObjectB.body == event.bodyB || contactData.groupOrObjectA.body == event.bodyB && contactData.groupOrObjectB.body == event.bodyA)
+					if( contactData.groupOrObjectA.body == event.bodyA && contactData.groupOrObjectB.body == event.bodyB || 
+						contactData.groupOrObjectA.body == event.bodyB && contactData.groupOrObjectB.body == event.bodyA)
 					{
 						contactData.handler.call(null, contactData.groupOrObjectA, contactData.groupOrObjectB, event.contact);
 					}
 				}
 				else
 				{
-					if(contactData.groupOrObjectA == PhysicsObject(event.bodyA.GetUserData()).physicsProperties.contactGroup && 
-					   contactData.groupOrObjectB == PhysicsObject(event.bodyB.GetUserData()).physicsProperties.contactGroup)
+					if(
+						contactData.groupOrObjectA == PhysicsObject(event.bodyA.GetUserData()).physicsProperties.contactGroup && 
+					    contactData.groupOrObjectB == PhysicsObject(event.bodyB.GetUserData()).physicsProperties.contactGroup)
 					{
 						contactData.handler.call(null, PhysicsObject(event.bodyA.GetUserData()), PhysicsObject(event.bodyB.GetUserData()), event.contact);
 					}
