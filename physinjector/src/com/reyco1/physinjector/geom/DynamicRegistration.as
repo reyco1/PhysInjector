@@ -37,7 +37,7 @@ package com.reyco1.physinjector.geom
 		
 		public static function getRegistrationOffset(target:*, pnt:Point):Point
 		{
-			var b1Bounds:Rectangle = target.getRect(target.parent);
+			var b1Bounds:Rectangle = target.getBounds(target.parent); //target.getRect(target.parent);
 			var regPoint:Point = new Point((b1Bounds.x - target.x) + b1Bounds.width * pnt.x, (b1Bounds.y - target.y) + b1Bounds.height * pnt.y);
 			
 			return regPoint;

@@ -9,7 +9,6 @@ package com.reyco1.physinjector
 	import com.reyco1.physinjector.contact.ContactManager;
 	import com.reyco1.physinjector.data.PhysicsObject;
 	import com.reyco1.physinjector.data.PhysicsProperties;
-	import com.reyco1.physinjector.events.ContactEvent;
 	import com.reyco1.physinjector.factory.BodyFactory;
 	import com.reyco1.physinjector.geom.DynamicRegistration;
 	import com.reyco1.physinjector.manager.DebugDrawManager;
