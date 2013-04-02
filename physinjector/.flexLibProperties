@@ -13,7 +13,6 @@
     <classEntry path="com.reyco1.physinjector.events.PhysicsPropertyChangeEvent"/>
     <classEntry path="com.reyco1.physinjector.geom.Separator"/>
     <classEntry path="com.reyco1.physinjector.geom.PointSorter"/>
-    <classEntry path="com.reyco1.physinjector.StarlingPhysInjector"/>
     <classEntry path="com.reyco1.physinjector.plugins.Explosion"/>
     <classEntry path="com.reyco1.physinjector.plugins.Implosion"/>
     <classEntry path="com.reyco1.physinjector.plugins.Magnetize"/>

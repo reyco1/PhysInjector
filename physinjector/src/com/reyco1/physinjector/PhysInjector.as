@@ -30,6 +30,7 @@ package com.reyco1.physinjector
 	 */	
 	public class PhysInjector extends EventDispatcher implements IEventDispatcher
 	{
+		public static var 	STARLING:Boolean = false;
 		public static var   WORLD_SCALE:Number = 70;
 		
 		public static const SQUARE:int   = 0;
@@ -107,7 +108,7 @@ package com.reyco1.physinjector
 			
 			if(displayObj.rotation != 0)
 			{
-				currentRotation = displayObj.rotation
+				currentRotation = displayObj.rotation;
 				displayObj.rotation = 0;
 			}
 			
@@ -115,7 +116,7 @@ package com.reyco1.physinjector
 				properties = new PhysicsProperties();
 			
 			properties.pivot = DynamicRegistration.getRegistrationOffset( displayObj, REGISTRATION_RATIO );
-			properties.angle = Utils.degreesToRadians( currentRotation );
+			properties.angle = STARLING ? currentRotation : Utils.degreesToRadians( currentRotation );
 			
 			globalCenter = DynamicRegistration.getGlobalDisplayObjectCenter( displayObj );
 			

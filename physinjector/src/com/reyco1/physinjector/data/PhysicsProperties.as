@@ -12,10 +12,11 @@ package com.reyco1.physinjector.data
 	public class PhysicsProperties extends EventDispatcher
 	{
 		// body definition		
+		private var _inertiaScale:Number		= 1.0;
 		private var _active:Boolean			= true;
 		private var _allowSleep:Boolean 	= true;		
 		private var _angle:Number			= 0.0;
-		private var _angularDamping:Number 	= 0.2;
+		private var _angularDamping:Number 	= 0.0;
 		private var _angularVelocity:Number = 0.0;
 		private var _awake:Boolean			= true;
 		private var _isBullet:Boolean 	 	= false;
@@ -355,6 +356,17 @@ package com.reyco1.physinjector.data
 		public function set contactGroup(value:String):void
 		{
 			_contactGroup = value;
+		}
+
+		public function get inertiaScale():Number
+		{
+			return _inertiaScale;
+		}
+
+		public function set inertiaScale(value:Number):void
+		{
+			_inertiaScale = value;
+			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "SetInertiaScale", value));
 		}
 
 

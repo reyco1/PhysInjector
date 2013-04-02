@@ -1,5 +1,8 @@
 package com.reyco1.physinjector.geom
 {
+	import com.reyco1.physinjector.PhysInjector;
+	import com.reyco1.physinjector.manager.Utils;
+	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
@@ -25,7 +28,10 @@ package com.reyco1.physinjector.geom
 			a = target.localToGlobal(a);
 			a = target.parent.globalToLocal(a);
 			
-			target[propertyName] = value;
+			if(PhysInjector.STARLING && propertyName == "rotation")
+				target[propertyName] = Utils.degreesToRadians(value);
+			else
+				target[propertyName] = value;
 			
 			var b:Point = registration.clone();
 			b = target.localToGlobal(b);
@@ -37,8 +43,17 @@ package com.reyco1.physinjector.geom
 		
 		public static function getRegistrationOffset(target:*, pnt:Point):Point
 		{
-			var b1Bounds:Rectangle = target.getBounds(target.parent); //target.getRect(target.parent);
-			var regPoint:Point = new Point((b1Bounds.x - target.x) + b1Bounds.width * pnt.x, (b1Bounds.y - target.y) + b1Bounds.height * pnt.y);
+			var b1Bounds:Rectangle = PhysInjector.STARLING ? target.getBounds(target.parent) : target.getRect(target.parent);
+			var regPoint:Point = new Point();			
+			
+			if(PhysInjector.STARLING)
+			{
+				regPoint = new Point((b1Bounds.x - target.x) + target.pivotX + b1Bounds.width * pnt.x, (b1Bounds.y - target.y) + target.pivotY + b1Bounds.height * pnt.y);
+			}
+			else
+			{
+				regPoint = new Point((b1Bounds.x - target.x) + b1Bounds.width * pnt.x, (b1Bounds.y - target.y) + b1Bounds.height * pnt.y);
+			}			
 			
 			return regPoint;
 		}
