@@ -21,6 +21,8 @@ package com.reyco1.physinjector.manager
 			PhysInjector.WORLD.SetDebugDraw(dbgDraw);
 			
 			debugSprite = drawContainer;
+			
+			debugSprite.mouseEnabled = debugSprite.mouseChildren = false;
 		}
 		
 		public function update():void

@@ -238,7 +238,7 @@ package com.reyco1.physinjector.data
 		public function set active(value:Boolean):void
 		{
 			_active = value;
-			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "IsActive", value));
+			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "SetActive", value));
 		}
 
 		public function get awake():Boolean
@@ -249,7 +249,7 @@ package com.reyco1.physinjector.data
 		public function set awake(value:Boolean):void
 		{
 			_awake = value;
-			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "IsAwake", value));
+			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "SetAwake", value));
 		}
 		
 		public function get isDraggable():Boolean
