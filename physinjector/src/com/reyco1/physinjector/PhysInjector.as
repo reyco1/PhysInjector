@@ -7,6 +7,7 @@ package com.reyco1.physinjector
 	
 	import com.reyco1.physinjector.contact.ContactListener;
 	import com.reyco1.physinjector.contact.ContactManager;
+	import com.reyco1.physinjector.data.Definitions;
 	import com.reyco1.physinjector.data.PhysicsObject;
 	import com.reyco1.physinjector.data.PhysicsProperties;
 	import com.reyco1.physinjector.factory.BodyFactory;
@@ -36,6 +37,7 @@ package com.reyco1.physinjector
 		public static const SQUARE:int   = 0;
 		public static const CIRCLE:int   = 1;
 		public static const POLYGON:int  = 2;
+		public static const PHYSEDIT:int = 3;
 		
 		public static var WORLD:b2World;
 		public static var REGISTRATION_RATIO:Point =  new Point(0.5, 0.5);
@@ -51,6 +53,7 @@ package com.reyco1.physinjector
 		private   var stage:Stage;
 		private   var dragManager:DragManager;
 		private   var debugDrawManager:DebugDrawManager;
+		private   var physicsEditorClasses:Dictionary;
 		
 		public    var juggler:Juggler;
 		public    var bodies:Vector.<b2Body>
@@ -78,6 +81,8 @@ package com.reyco1.physinjector
 			jointDestroyQueue = new Vector.<b2Joint>();
 			dragManager		  = new DragManager(stage);
 			WORLD	  		  = new b2World( defaultGravity, true );
+			
+			physicsEditorClasses = new Dictionary();
 			
 			allowDrag = draggingAllowed;
 			
@@ -151,6 +156,17 @@ package com.reyco1.physinjector
 						globalCenter.x, 
 						globalCenter.y,
 						properties.vertices, 
+						properties 
+					);
+					break;
+				
+				case PHYSEDIT:
+					properties.pivot = new Point(properties.pivot.x / WORLD_SCALE, properties.pivot.y / WORLD_SCALE);
+					
+					b = createFromPhysicsEditor
+					( 
+						globalCenter.x, 
+						globalCenter.y, 
 						properties 
 					);
 					break;
@@ -253,6 +269,13 @@ package com.reyco1.physinjector
 		public function createPolygon(numX:Number, numY:Number, vertices:Vector.<b2Vec2>, physicsProperties:PhysicsProperties):b2Body 
 		{
 			var body:b2Body = BodyFactory.createPolygon(numX, numY, vertices, physicsProperties);			
+			bodies.push( body );			
+			return body;
+		}		
+		
+		public function createFromPhysicsEditor(x:Number, y:Number, properties:PhysicsProperties):b2Body
+		{
+			var body:b2Body = BodyFactory.createFromPhysicsEditor(x, y, properties);			
 			bodies.push( body );			
 			return body;
 		}

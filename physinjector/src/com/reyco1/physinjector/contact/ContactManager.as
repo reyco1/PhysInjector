@@ -53,34 +53,22 @@ package com.reyco1.physinjector.contact
 		
 		public static function onContactBegin(nameOrGroupA:String, nameOrGroupB:String, handler:Function, isGroupListener:Boolean = false):void
 		{
-			if(!isGroupListener)
-				onBeginObjects[nameOrGroupA+nameOrGroupB] = new ContactData(injector.getPhysicsObjectByName(nameOrGroupA), injector.getPhysicsObjectByName(nameOrGroupB), handler, isGroupListener);
-			else
-				onBeginObjects[nameOrGroupA+nameOrGroupB] = new ContactData(nameOrGroupA, nameOrGroupB, handler, isGroupListener);
+			ContactManager.register(onBeginObjects, nameOrGroupA, nameOrGroupB, handler, isGroupListener);	
 		}
 		
 		public static function onContactEnd(nameOrGroupA:String, nameOrGroupB:String, handler:Function, isGroupListener:Boolean = false):void
 		{
-			if(!isGroupListener)
-				onEndObjects[nameOrGroupA+nameOrGroupB] = new ContactData(injector.getPhysicsObjectByName(nameOrGroupA), injector.getPhysicsObjectByName(nameOrGroupB), handler, isGroupListener);
-			else
-				onBeginObjects[nameOrGroupA+nameOrGroupB] = new ContactData(nameOrGroupA, nameOrGroupB, handler, isGroupListener);
+			ContactManager.register(onEndObjects, nameOrGroupA, nameOrGroupB, handler, isGroupListener);	
 		}
 		
 		public static function onPreSolve(nameOrGroupA:String, nameOrGroupB:String, handler:Function, isGroupListener:Boolean = false):void
 		{
-			if(!isGroupListener)
-				onPreObjects[nameOrGroupA+nameOrGroupB] = new ContactData(injector.getPhysicsObjectByName(nameOrGroupA), injector.getPhysicsObjectByName(nameOrGroupB), handler, isGroupListener);
-			else
-				onBeginObjects[nameOrGroupA+nameOrGroupB] = new ContactData(nameOrGroupA, nameOrGroupB, handler, isGroupListener);
+			ContactManager.register(onPreObjects, nameOrGroupA, nameOrGroupB, handler, isGroupListener);	
 		}
 		
 		public static function onPostSolve(nameOrGroupA:String, nameOrGroupB:String, handler:Function, isGroupListener:Boolean = false):void
 		{
-			if(!isGroupListener)
-				onPostObjects[nameOrGroupA+nameOrGroupB] = new ContactData(injector.getPhysicsObjectByName(nameOrGroupA), injector.getPhysicsObjectByName(nameOrGroupB), handler, isGroupListener);
-			else
-				onBeginObjects[nameOrGroupA+nameOrGroupB] = new ContactData(nameOrGroupA, nameOrGroupB, handler, isGroupListener);
+			ContactManager.register(onPostObjects, nameOrGroupA, nameOrGroupB, handler, isGroupListener);	
 		}		
 		
 		/* remove listen methods */
@@ -125,6 +113,16 @@ package com.reyco1.physinjector.contact
 		protected static function handleContactEnd(event:ContactEvent):void
 		{
 			evaluate(onEndObjects, event);
+		}
+		
+		/* register */
+		
+		private static function register(dic:Dictionary, nameOrGroupA:String, nameOrGroupB:String, handler:Function, isGroupListener:Boolean = false):void
+		{
+			if(!isGroupListener)
+				dic[nameOrGroupA+nameOrGroupB] = new ContactData(injector.getPhysicsObjectByName(nameOrGroupA), injector.getPhysicsObjectByName(nameOrGroupB), handler, isGroupListener);
+			else
+				dic[nameOrGroupA+nameOrGroupB] = new ContactData(nameOrGroupA, nameOrGroupB, handler, isGroupListener);
 		}
 		
 		/* evaluate  */

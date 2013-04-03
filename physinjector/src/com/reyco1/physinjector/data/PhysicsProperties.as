@@ -39,8 +39,10 @@ package com.reyco1.physinjector.data
 		
 		private var _vertices:Vector.<b2Vec2>;
 		private var _name:String;
-		private var _contactGroup:String	= "none";
-		private var _pivot:Point			= new Point();
+		private var _contactGroup:String	   = "none";
+		private var _pivot:Point			   = new Point();
+		private var _physicsEditorClass:Class  = null;
+		private var _physicsEditorName:String  = "";
 		
 		public function PhysicsProperties(quickProps:Object = null)
 		{
@@ -367,6 +369,26 @@ package com.reyco1.physinjector.data
 		{
 			_inertiaScale = value;
 			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "SetInertiaScale", value));
+		}
+
+		public function get physicsEditorClass():Class
+		{
+			return _physicsEditorClass;
+		}
+
+		public function set physicsEditorClass(value:Class):void
+		{
+			_physicsEditorClass = value;
+		}
+
+		public function get physicsEditorName():String
+		{
+			return _physicsEditorName;
+		}
+
+		public function set physicsEditorName(value:String):void
+		{
+			_physicsEditorName = value;
 		}
 
 
