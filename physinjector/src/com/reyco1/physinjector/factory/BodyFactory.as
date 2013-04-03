@@ -76,6 +76,7 @@ package com.reyco1.physinjector.factory
 			{
 				physicsEditorInstances[properties.physicsEditorClass] = new properties.physicsEditorClass() as Object;
 				physClass = physicsEditorInstances[properties.physicsEditorClass];
+				physClass["ptm_ratio"] = PhysInjector.WORLD_SCALE;
 			}
 			
 			if(!physClass.hasOwnProperty("dict"))
