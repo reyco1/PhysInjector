@@ -12,37 +12,38 @@ package com.reyco1.physinjector.data
 	public class PhysicsProperties extends EventDispatcher
 	{
 		// body definition		
-		private var _inertiaScale:Number		= 1.0;
-		private var _active:Boolean			= true;
-		private var _allowSleep:Boolean 	= true;		
-		private var _angle:Number			= 0.0;
-		private var _angularDamping:Number 	= 0.0;
-		private var _angularVelocity:Number = 0.0;
-		private var _awake:Boolean			= true;
-		private var _isBullet:Boolean 	 	= false;
-		private var _rotationFixed:Boolean 	= false;
-		private var _linearDamping:Number  	= 0.2; 
-		private var _linearVelocity:b2Vec2  = new b2Vec2();
-		private var _isDynamic:Boolean 	   	= true;
-		private var _x:Number 				= 0;
-		private var _y:Number 				= 0;
+		private var _inertiaScale:Number			= 1.0;
+		private var _active:Boolean					= true;
+		private var _allowSleep:Boolean 			= true;		
+		private var _angle:Number					= 0.0;
+		private var _angularDamping:Number 			= 0.0;
+		private var _angularVelocity:Number 		= 0.0;
+		private var _awake:Boolean					= true;
+		private var _isBullet:Boolean 	 			= false;
+		private var _rotationFixed:Boolean 			= false;
+		private var _linearDamping:Number  			= 0.2; 
+		private var _linearVelocity:b2Vec2  		= new b2Vec2();
+		private var _isDynamic:Boolean 	   			= true;
+		private var _x:Number 						= 0;
+		private var _y:Number 						= 0;
 		
 		// fixture definition
-		private var _density:Number 		= 1.0;
-		private var _friction:Number 		= 0.2;
-		private var _restitution:Number 	= 0.2;		
-		private var _maskBits:uint 		 	= 0x0002;
-		private var _categoryBits:uint 	 	= 0x0002;
-		private var _groupIndex:Number		= 0;
-		private var _isDraggable:Boolean 	= true;		
-		private var _isSensor:Boolean 	 	= false;
+		private var _density:Number 				= 1.0;
+		private var _friction:Number 				= 0.2;
+		private var _restitution:Number 			= 0.2;		
+		private var _maskBits:uint 		 			= 0x0002;
+		private var _categoryBits:uint 	 			= 0x0002;
+		private var _groupIndex:Number				= 0;
+		private var _isDraggable:Boolean 			= true;		
+		private var _isSensor:Boolean 	 			= false;
 		
-		private var _vertices:Vector.<b2Vec2>;
-		private var _name:String;
-		private var _contactGroup:String	   = "none";
-		private var _pivot:Point			   = new Point();
-		private var _physicsEditorClass:Class  = null;
-		private var _physicsEditorName:String  = "";
+		private var _vertices:Vector.<b2Vec2>		= null;
+		private var _name:String					= "";
+		private var _contactGroup:String	   		= "none";
+		private var _virtualCenterRegPoint:Point	= new Point();
+		private var _virtualTopLeftRegPoint:Point	= new Point();
+		private var _physicsEditorClass:Class  		= null;
+		private var _physicsEditorName:String  		= "";
 		
 		public function PhysicsProperties(quickProps:Object = null)
 		{
@@ -309,6 +310,17 @@ package com.reyco1.physinjector.data
 			_y = value;
 			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "y", value, "custom"));
 		}
+		
+		public function get inertiaScale():Number
+		{
+			return _inertiaScale;
+		}
+		
+		public function set inertiaScale(value:Number):void
+		{
+			_inertiaScale = value;
+			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "SetInertiaScale", value));
+		}
 
 		public function get vertices():Vector.<b2Vec2>
 		{
@@ -320,14 +332,14 @@ package com.reyco1.physinjector.data
 			_vertices = value;
 		}
 
-		public function get pivot():Point
+		public function get virtualCenterRegPoint():Point
 		{
-			return _pivot;
+			return _virtualCenterRegPoint;
 		}
 
-		public function set pivot(value:Point):void
+		public function set virtualCenterRegPoint(value:Point):void
 		{
-			_pivot = value;
+			_virtualCenterRegPoint = value;
 		}
 
 		public function get name():String
@@ -360,17 +372,6 @@ package com.reyco1.physinjector.data
 			_contactGroup = value;
 		}
 
-		public function get inertiaScale():Number
-		{
-			return _inertiaScale;
-		}
-
-		public function set inertiaScale(value:Number):void
-		{
-			_inertiaScale = value;
-			dispatchEvent(new PhysicsPropertyChangeEvent(PhysicsPropertyChangeEvent.CHANGE, "SetInertiaScale", value));
-		}
-
 		public function get physicsEditorClass():Class
 		{
 			return _physicsEditorClass;
@@ -389,6 +390,16 @@ package com.reyco1.physinjector.data
 		public function set physicsEditorName(value:String):void
 		{
 			_physicsEditorName = value;
+		}
+
+		public function get virtualTopLeftRegPoint():Point
+		{
+			return _virtualTopLeftRegPoint;
+		}
+
+		public function set virtualTopLeftRegPoint(value:Point):void
+		{
+			_virtualTopLeftRegPoint = value;
 		}
 
 

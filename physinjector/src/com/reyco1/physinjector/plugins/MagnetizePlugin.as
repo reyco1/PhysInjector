@@ -6,16 +6,17 @@ package com.reyco1.physinjector.plugins
 	
 	import com.reyco1.physinjector.PhysInjector;
 
-	public class Magnetize
+	public class MagnetizePlugin
 	{
+		private var _active:Boolean;
+		
 		private var injector:PhysInjector;
 		private var subscribers:Vector.<b2Body>;
 		private var mainBody:b2Body;
 		private var intensity:Number;
-		private var _active:Boolean;
 		private var coverage:Number;
 		
-		public function Magnetize(displayObject:*, injector:PhysInjector, intensity:Number = 5, coverage:Number = 100)
+		public function MagnetizePlugin(displayObject:*, injector:PhysInjector, intensity:Number = 5, coverage:Number = 100)
 		{
 			this.injector 	= injector;
 			this.intensity	= intensity;

@@ -4,10 +4,7 @@ package com.reyco1.physinjector.manager
 	{
 		private var subscribers:Vector.<Object> = new <Object>[];
 		
-		public function Juggler():void
-		{
-			
-		}
+		public function Juggler():void{}
 		
 		public function subscribe(callback:Function):void 
 		{

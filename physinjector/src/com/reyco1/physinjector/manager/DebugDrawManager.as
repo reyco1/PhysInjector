@@ -9,16 +9,17 @@ package com.reyco1.physinjector.manager
 	public class DebugDrawManager
 	{
 		public var debugSprite:Sprite
+		public static var DEBUG_DRAW:b2DebugDraw;
 		
 		public function DebugDrawManager(drawContainer:Sprite, fillAlpha:Number = 0.5, lineThickness:Number = 1)
 		{
-			var dbgDraw:b2DebugDraw = new b2DebugDraw();
-			dbgDraw.SetSprite(drawContainer);
-			dbgDraw.SetDrawScale(PhysInjector.WORLD_SCALE);
-			dbgDraw.SetFillAlpha(fillAlpha);
-			dbgDraw.SetLineThickness(lineThickness);
-			dbgDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit); // | b2DebugDraw.e_centerOfMassBit
-			PhysInjector.WORLD.SetDebugDraw(dbgDraw);
+			DEBUG_DRAW = new b2DebugDraw();
+			DEBUG_DRAW.SetSprite(drawContainer);
+			DEBUG_DRAW.SetDrawScale(PhysInjector.WORLD_SCALE);
+			DEBUG_DRAW.SetFillAlpha(fillAlpha);
+			DEBUG_DRAW.SetLineThickness(lineThickness);
+			DEBUG_DRAW.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit); // | b2DebugDraw.e_centerOfMassBit
+			PhysInjector.WORLD.SetDebugDraw(DEBUG_DRAW);
 			
 			debugSprite = drawContainer;
 			

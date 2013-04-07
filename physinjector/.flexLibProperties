@@ -13,13 +13,18 @@
     <classEntry path="com.reyco1.physinjector.events.PhysicsPropertyChangeEvent"/>
     <classEntry path="com.reyco1.physinjector.geom.Separator"/>
     <classEntry path="com.reyco1.physinjector.geom.PointSorter"/>
-    <classEntry path="com.reyco1.physinjector.plugins.Explosion"/>
-    <classEntry path="com.reyco1.physinjector.plugins.Implosion"/>
-    <classEntry path="com.reyco1.physinjector.plugins.Magnetize"/>
+    <classEntry path="com.reyco1.physinjector.plugins.ExplosionPlugin"/>
+    <classEntry path="com.reyco1.physinjector.plugins.ImplosionPlugin"/>
+    <classEntry path="com.reyco1.physinjector.plugins.MagnetizePlugin"/>
     <classEntry path="com.reyco1.physinjector.manager.Juggler"/>
     <classEntry path="com.reyco1.physinjector.data.Definitions"/>
     <classEntry path="com.reyco1.physinjector.manager.Utils"/>
     <classEntry path="com.reyco1.physinjector.contact.ContactManager"/>
+    <classEntry path="com.reyco1.physinjector.plugins.BuoyancyPlugin"/>
+    <classEntry path="com.reyco1.physinjector.data.WorldVariables"/>
+    <classEntry path="com.reyco1.physinjector.plugins.BulletTime"/>
+    <classEntry path="com.reyco1.physinjector.manager.EaseManager"/>
+    <classEntry path="com.reyco1.physinjector.events.EaseEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

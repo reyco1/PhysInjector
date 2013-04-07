@@ -7,6 +7,7 @@ package com.reyco1.physinjector.data
 	
 	import com.reyco1.physinjector.PhysInjector;
 	import com.reyco1.physinjector.events.PhysicsPropertyChangeEvent;
+	import com.reyco1.physinjector.manager.Utils;
 	
 	import flash.events.EventDispatcher;
 	import flash.geom.Point;
@@ -23,18 +24,15 @@ package com.reyco1.physinjector.data
 		private var _y:Number;
 		private var _name:String;
 		private var _data:Object;
-		private var _offsetX:Number;
-		private var _offsetY:Number;
 		private var _hideSkin:Boolean;
 		
 		private var loc:b2Vec2;
 		
 		public function PhysicsObject(body:b2Body, displayObject:*, physicsProperties:PhysicsProperties = null)
 		{
-			_body = body;
-			_displayObject = displayObject;
-			
-			this.physicsProperties = physicsProperties ? physicsProperties : new PhysicsProperties();
+			_body 					= body;
+			_displayObject 			= displayObject;			
+			this.physicsProperties 	= physicsProperties ? physicsProperties : new PhysicsProperties();
 		}
 		
 		// pulic methods
@@ -44,10 +42,13 @@ package com.reyco1.physinjector.data
 			return getPointOnDisplayObject(new Point(0.5, 0.5));
 		}
 		
-		public function getPointOnDisplayObject(point:Point):Point
+		public function getPointOnDisplayObject(point:Point, ratio:Boolean = true):Point
 		{
-			var localPoint:Point = new Point(_displayObject.x + (_displayObject.width * point.x), _displayObject.y + (_displayObject.height * point.y));
-			return _displayObject.parent.localToGlobal( localPoint );
+			var localPoint:Point = ratio ? new Point(_displayObject.width * point.x, _displayObject.height * point.y) : point;
+			localPoint.x += ratio ? physicsProperties.virtualTopLeftRegPoint.x : 0;
+			localPoint.y += ratio ? physicsProperties.virtualTopLeftRegPoint.y : 0;
+			
+			return _displayObject.localToGlobal( localPoint );
 		}
 		
 		public function move(x:Number, y:Number):void
@@ -55,6 +56,12 @@ package com.reyco1.physinjector.data
 			var localPoint:Point = _displayObject.parent.localToGlobal( new Point(x, y) );
 			loc = new b2Vec2(localPoint.x/PhysInjector.WORLD_SCALE, (localPoint.y/PhysInjector.WORLD_SCALE));
 			body.SetPosition(loc);
+		}
+		
+		public function rotate(degrees:Number):void
+		{
+			var radians:Number = Utils.degreesToRadians( degrees );
+			body.SetAngle( radians );
 		}
 		
 		// event handlers
@@ -169,26 +176,6 @@ package com.reyco1.physinjector.data
 		public function get shape():b2Shape
 		{
 			return fixture.GetShape();
-		}
-
-		public function get offsetY():Number
-		{
-			return _offsetY;
-		}
-
-		public function set offsetY(value:Number):void
-		{
-			_offsetY = value;
-		}
-
-		public function get offsetX():Number
-		{
-			return _offsetX;
-		}
-
-		public function set offsetX(value:Number):void
-		{
-			_offsetX = value;
 		}
 
 		public function dispose():void

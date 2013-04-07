@@ -28,5 +28,18 @@ package com.reyco1.physinjector.manager
 		{
 			return radians * 180 / Math.PI;
 		}
+		
+		public static function pointIsWithinRectangle(point:Point, rectangle:Rectangle):Boolean
+		{
+			var bool:Boolean = false;
+			if(point.x >= rectangle.x &&
+			   point.x <  rectangle.x + rectangle.width &&
+			   point.y >= rectangle.y &&
+			   point.y <  rectangle.y + rectangle.height)
+			{
+				bool = true;
+			}
+			return bool;
+		}
 	}
 }

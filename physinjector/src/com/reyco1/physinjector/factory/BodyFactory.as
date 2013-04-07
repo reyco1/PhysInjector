@@ -96,11 +96,11 @@ package com.reyco1.physinjector.factory
 				{                    
 					var p:Number;
 					var polygons:Array = fixture[8];
-					for(p=0; p<polygons.length; p++)
+					for(p = 0; p < polygons.length; p++)
 					{
 						var polygonShape:b2PolygonShape = new b2PolygonShape();
 						polygonShape.SetAsArray(polygons[p], polygons[p].length);
-						fixtureDef.shape=polygonShape;
+						fixtureDef.shape = polygonShape;
 						
 						body.CreateFixture(fixtureDef);
 					}
@@ -109,7 +109,7 @@ package com.reyco1.physinjector.factory
 				{
 					var circleShape:b2CircleShape = new b2CircleShape(fixture[9]);                    
 					circleShape.SetLocalPosition(fixture[8]);
-					fixtureDef.shape=circleShape;
+					fixtureDef.shape = circleShape;
 					body.CreateFixture(fixtureDef);                    
 				}
 			}

@@ -7,9 +7,9 @@ package com.reyco1.physinjector
 	
 	import com.reyco1.physinjector.contact.ContactListener;
 	import com.reyco1.physinjector.contact.ContactManager;
-	import com.reyco1.physinjector.data.Definitions;
 	import com.reyco1.physinjector.data.PhysicsObject;
 	import com.reyco1.physinjector.data.PhysicsProperties;
+	import com.reyco1.physinjector.data.WorldVariables;
 	import com.reyco1.physinjector.factory.BodyFactory;
 	import com.reyco1.physinjector.geom.DynamicRegistration;
 	import com.reyco1.physinjector.manager.DebugDrawManager;
@@ -31,29 +31,26 @@ package com.reyco1.physinjector
 	 */	
 	public class PhysInjector extends EventDispatcher implements IEventDispatcher
 	{
-		public static var 	STARLING:Boolean = false;
-		public static var   WORLD_SCALE:Number = 70;
+		public static var STARLING:Boolean   = false;
+		public static var WORLD_SCALE:Number = WorldVariables.WORLD_SCALE;
+		public static var WORLD:b2World		 = null;
 		
 		public static const SQUARE:int   = 0;
 		public static const CIRCLE:int   = 1;
 		public static const POLYGON:int  = 2;
 		public static const PHYSEDIT:int = 3;
 		
-		public static var WORLD:b2World;
-		public static var REGISTRATION_RATIO:Point =  new Point(0.5, 0.5);
-		
 		protected var defaultGravity:b2Vec2;
 		protected var contacts:ContactListener;
 		protected var bodyHash:Dictionary;
 		
-		private   var draggingAllowed:Boolean = true;
+		private   var draggingAllowed:Boolean;
 		private   var joints:Vector.<b2Joint>;
 		private   var bodyDestroyQueue:Vector.<b2Body>;
 		private   var jointDestroyQueue:Vector.<b2Joint>;
 		private   var stage:Stage;
 		private   var dragManager:DragManager;
 		private   var debugDrawManager:DebugDrawManager;
-		private   var physicsEditorClasses:Dictionary;
 		
 		public    var juggler:Juggler;
 		public    var bodies:Vector.<b2Body>
@@ -82,7 +79,7 @@ package com.reyco1.physinjector
 			dragManager		  = new DragManager(stage);
 			WORLD	  		  = new b2World( defaultGravity, true );
 			
-			physicsEditorClasses = new Dictionary();
+			WorldVariables.DELTA = stage.frameRate;
 			
 			allowDrag = draggingAllowed;
 			
@@ -120,8 +117,9 @@ package com.reyco1.physinjector
 			if(!properties)
 				properties = new PhysicsProperties();
 			
-			properties.pivot = DynamicRegistration.getRegistrationOffset( displayObj, REGISTRATION_RATIO );
-			properties.angle = STARLING ? currentRotation : Utils.degreesToRadians( currentRotation );
+			properties.virtualCenterRegPoint 	= DynamicRegistration.getRegistrationOffset( displayObj, new Point(0.5,0.5) );
+			properties.virtualTopLeftRegPoint 	= DynamicRegistration.getRegistrationOffset( displayObj, new Point(0,0) );
+			properties.angle 					= STARLING ? currentRotation : Utils.degreesToRadians( currentRotation );
 			
 			globalCenter = DynamicRegistration.getGlobalDisplayObjectCenter( displayObj );
 			
@@ -149,7 +147,7 @@ package com.reyco1.physinjector
 					break;
 				
 				case POLYGON:
-					properties.pivot = new Point(properties.pivot.x / WORLD_SCALE, properties.pivot.y / WORLD_SCALE);
+					properties.virtualCenterRegPoint = new Point(0, 0);
 					
 					b = createPolygon
 					( 
@@ -161,7 +159,7 @@ package com.reyco1.physinjector
 					break;
 				
 				case PHYSEDIT:
-					properties.pivot = new Point(properties.pivot.x / WORLD_SCALE, properties.pivot.y / WORLD_SCALE);
+					properties.virtualCenterRegPoint = new Point(0, 0);
 					
 					b = createFromPhysicsEditor
 					( 
@@ -218,8 +216,8 @@ package com.reyco1.physinjector
 			var newY:Number 			 = localPosition.y;
 			var newRotation:Number 		 = Utils.radiansToDegrees( body.GetAngle() );
 			
-			DynamicRegistration.move(displayObject, physObject.physicsProperties.pivot, newX, newY)
-			DynamicRegistration.rotate(displayObject, physObject.physicsProperties.pivot, newRotation);			
+			DynamicRegistration.move(displayObject, physObject.physicsProperties.virtualCenterRegPoint, newX, newY)
+			DynamicRegistration.rotate(displayObject, physObject.physicsProperties.virtualCenterRegPoint, newRotation);			
 		}	
 		
 		/* CREATIONAL */
@@ -447,7 +445,11 @@ package com.reyco1.physinjector
 		 */		
 		public function update():void
 		{			
-			WORLD.Step(1 / stage.frameRate, 10, 10);
+			var delta:Number = 1 / (WorldVariables.DELTA * WorldVariables.BULLET_TIME_FACTOR);
+			var velocityIterations:Number = WorldVariables.VELOCITY_ITERATIONS * WorldVariables.BULLET_TIME_FACTOR;
+			var positionIterations:Number = WorldVariables.POSITION_ITERATIONS * WorldVariables.BULLET_TIME_FACTOR;
+			
+			WORLD.Step(delta, velocityIterations, positionIterations);
 			WORLD.ClearForces();			
 			
 			while(jointDestroyQueue.length > 0)
