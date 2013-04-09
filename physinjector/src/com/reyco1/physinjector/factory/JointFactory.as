@@ -104,6 +104,39 @@ package com.reyco1.physinjector.factory
 			return joint;
 		}
 		
+		public static function createRopeJoint(body1:b2Body, body2:b2Body, maxLength:Number = 6, collideConnected:Boolean = false):b2RopeJoint
+		{
+			var ropeJointDef:b2RopeJointDef = new b2RopeJointDef();
+			ropeJointDef.bodyA = body1;
+			ropeJointDef.bodyB = body2;
+			ropeJointDef.localAnchorA = new b2Vec2(0,0);
+			ropeJointDef.localAnchorB = new b2Vec2(0,0);
+			ropeJointDef.maxLength = 6;
+			ropeJointDef.collideConnected = collideConnected;
+			
+			var joint:b2RopeJoint = PhysInjector.WORLD.CreateJoint( ropeJointDef ) as b2RopeJoint;
+			
+			return joint;
+		}
+		
+		public static function createElasticJoint(body1:b2Body, maxStrength:Number = 6, collideConnected:Boolean = true):b2MouseJoint
+		{
+			var md:b2MouseJointDef = new b2MouseJointDef();
+			md.bodyA 			   = PhysInjector.WORLD.GetGroundBody();
+			md.bodyB 			   = body1;
+			md.collideConnected    = true;
+			md.maxForce 		   = maxStrength * 100 * body1.GetMass();
+			md.frequencyHz		   = maxStrength * 100;
+			
+			var bodypos:b2Vec2 = body1.GetWorldCenter();			
+			md.target.Set(bodypos.x, bodypos.y);
+			
+			var joint:b2MouseJoint = PhysInjector.WORLD.CreateJoint(md) as b2MouseJoint;
+			body1.SetAwake(true);
+			
+			return joint;
+		}
+		
 		public static function createDistanceJoint(body1:b2Body, body2:b2Body, anchorPoint1:Point, anchorPoint2:Point, collideConnected:Boolean):b2DistanceJoint 
 		{
 			var anchor01:b2Vec2 = Utils.pointTob2Vec2( anchorPoint1 );

@@ -64,7 +64,7 @@ package com.reyco1.physinjector.manager
 			md.bodyA 			   = PhysInjector.WORLD.GetGroundBody();
 			md.bodyB 			   = body;
 			md.collideConnected    = true;
-			md.maxForce 		   = 10000;
+			md.maxForce 		   = 1000 * body.GetMass();
 			
 			md.target.Set(mouseXWorldPhys, mouseYWorldPhys);
 			

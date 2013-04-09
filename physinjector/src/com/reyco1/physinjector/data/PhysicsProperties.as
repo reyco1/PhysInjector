@@ -37,6 +37,7 @@ package com.reyco1.physinjector.data
 		private var _isDraggable:Boolean 			= true;		
 		private var _isSensor:Boolean 	 			= false;
 		
+		// custom
 		private var _vertices:Vector.<b2Vec2>		= null;
 		private var _name:String					= "";
 		private var _contactGroup:String	   		= "none";

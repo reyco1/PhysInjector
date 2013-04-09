@@ -46,7 +46,7 @@ package com.reyco1.physinjector
 		
 		private   var draggingAllowed:Boolean;
 		private   var joints:Vector.<b2Joint>;
-		private   var bodyDestroyQueue:Vector.<b2Body>;
+		private   var bodyDestroyQueue:Vector.<Object>;
 		private   var jointDestroyQueue:Vector.<b2Joint>;
 		private   var stage:Stage;
 		private   var dragManager:DragManager;
@@ -74,7 +74,7 @@ package com.reyco1.physinjector
 			bodyHash		  = new Dictionary();
 			bodies			  = new Vector.<b2Body>();
 			joints			  = new Vector.<b2Joint>();
-			bodyDestroyQueue  = new Vector.<b2Body>();
+			bodyDestroyQueue  = new Vector.<Object>();
 			jointDestroyQueue = new Vector.<b2Joint>();
 			dragManager		  = new DragManager(stage);
 			WORLD	  		  = new b2World( defaultGravity, true );
@@ -185,9 +185,9 @@ package com.reyco1.physinjector
 		 * @param displayObj
 		 * 
 		 */		
-		public function removePhysics(displayObj:*):void
+		public function removePhysics(displayObj:*, autoRemoveDisplayObject:Boolean = false):void
 		{
-			bodyDestroyQueue.push( bodyHash[ displayObj ] );
+			bodyDestroyQueue.push( {po:getPhysicsObject(displayObj), autoRemove:autoRemoveDisplayObject} );
 		}
 		
 		/**
@@ -216,7 +216,7 @@ package com.reyco1.physinjector
 			var newY:Number 			 = localPosition.y;
 			var newRotation:Number 		 = Utils.radiansToDegrees( body.GetAngle() );
 			
-			DynamicRegistration.move(displayObject, physObject.physicsProperties.virtualCenterRegPoint, newX, newY)
+			DynamicRegistration.move(displayObject,   physObject.physicsProperties.virtualCenterRegPoint, newX, newY)
 			DynamicRegistration.rotate(displayObject, physObject.physicsProperties.virtualCenterRegPoint, newRotation);			
 		}	
 		
@@ -457,16 +457,33 @@ package com.reyco1.physinjector
 				destroyJoint( jointDestroyQueue.splice(0, 1)[0] );
 			}
 			
+			var body:b2Body;
+			var dispObj:*;
+			var physObj:PhysicsObject;
+			var autoRemoveDisplayObject:Boolean;
+			var objRevmove:Object;
+			
 			while(bodyDestroyQueue.length > 0)
 			{
-				var b:b2Body = bodyDestroyQueue.splice(0, 1)[0];
-				delete bodyHash[ PhysicsObject( b.GetUserData() ).displayObject ];
+				objRevmove = bodyDestroyQueue.splice(0, 1)[0];
+				autoRemoveDisplayObject = objRevmove.autoRemove;
+				physObj = objRevmove.po;
+				dispObj = physObj.displayObject;
+				body    = physObj.body;
 				
-				PhysicsObject( b.GetUserData() ).dispose();
-				destroyBody( bodies.splice(bodies.indexOf( b ), 1)[0] );
+				delete bodyHash[ dispObj ];
 				
-				b = null;
+				physObj.dispose();
+				destroyBody( bodies.splice(bodies.indexOf( body ), 1)[0] );
+				
+				if(autoRemoveDisplayObject)
+					dispObj.parent.removeChild( dispObj );
 			}
+			
+			body 		= null;
+			dispObj 	= null;
+			physObj 	= null;
+			objRevmove 	= null;
 			
 			if(dragManager)
 				dragManager.update();
