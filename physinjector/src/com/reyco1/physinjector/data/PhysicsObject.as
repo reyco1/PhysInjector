@@ -25,12 +25,14 @@ package com.reyco1.physinjector.data
 		private var _name:String;
 		private var _data:Object;
 		private var _hideSkin:Boolean;
+		private var _sliceData:Object;
 		
 		private var loc:b2Vec2;
 		
 		public function PhysicsObject(body:b2Body, displayObject:*, physicsProperties:PhysicsProperties = null)
 		{
 			_body 					= body;
+			_data					= {};
 			_displayObject 			= displayObject;			
 			this.physicsProperties 	= physicsProperties ? physicsProperties : new PhysicsProperties();
 		}
@@ -58,10 +60,15 @@ package com.reyco1.physinjector.data
 			body.SetPosition(loc);
 		}
 		
-		public function rotate(degrees:Number):void
+		public function set rotation(degrees:Number):void
 		{
 			var radians:Number = Utils.degreesToRadians( degrees );
 			body.SetAngle( radians );
+		}
+		
+		public function get rotation():Number
+		{
+			return Utils.radiansToDegrees( body.GetAngle() );
 		}
 		
 		// event handlers
@@ -186,7 +193,8 @@ package com.reyco1.physinjector.data
 			_body 				= null;
 			_displayObject 		= null;
 			_id 				= null;	
-			_data 				= null;			
+			_data 				= null;	
+			_sliceData			= null;
 			loc 				= null;
 		}
 
@@ -200,6 +208,17 @@ package com.reyco1.physinjector.data
 			_hideSkin = value;
 			displayObject.visible = value;
 		}
+
+		public function get sliceData():Object
+		{
+			return _sliceData;
+		}
+
+		public function set sliceData(value:Object):void
+		{
+			_sliceData = value;
+		}
+
 
 	}
 }

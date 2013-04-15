@@ -52,8 +52,9 @@ package com.reyco1.physinjector.factory
 			var body:b2Body = PhysInjector.WORLD.CreateBody(definitions.bodyDef);
 			
 			var sep:Separator = new Separator();
-			if(sep.Validate(vertices) != 0)
-				throw new Error("The Separator could not validate the vertices!");
+			var staus:int = sep.Validate(vertices);
+			if(staus != 0)
+				throw new Error("The Separator could not validate the vertices! status: " + staus);
 			sep.Separate(body, definitions.fixtureDef, vertices, PhysInjector.WORLD_SCALE);
 			
 			return body;

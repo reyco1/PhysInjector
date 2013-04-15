@@ -104,14 +104,14 @@ package com.reyco1.physinjector.factory
 			return joint;
 		}
 		
-		public static function createRopeJoint(body1:b2Body, body2:b2Body, maxLength:Number = 6, collideConnected:Boolean = false):b2RopeJoint
+		public static function createRopeJoint(body1:b2Body, body2:b2Body, maxLength:Number = 100, collideConnected:Boolean = false):b2RopeJoint
 		{
 			var ropeJointDef:b2RopeJointDef = new b2RopeJointDef();
 			ropeJointDef.bodyA = body1;
 			ropeJointDef.bodyB = body2;
 			ropeJointDef.localAnchorA = new b2Vec2(0,0);
 			ropeJointDef.localAnchorB = new b2Vec2(0,0);
-			ropeJointDef.maxLength = 6;
+			ropeJointDef.maxLength = maxLength / PhysInjector.WORLD_SCALE;
 			ropeJointDef.collideConnected = collideConnected;
 			
 			var joint:b2RopeJoint = PhysInjector.WORLD.CreateJoint( ropeJointDef ) as b2RopeJoint;

@@ -25,6 +25,9 @@
     <classEntry path="com.reyco1.physinjector.plugins.BulletTime"/>
     <classEntry path="com.reyco1.physinjector.manager.EaseManager"/>
     <classEntry path="com.reyco1.physinjector.events.EaseEvent"/>
+    <classEntry path="com.reyco1.physinjector.engines.SliceEngine"/>
+    <classEntry path="com.reyco1.physinjector.engines.sliceengine.SliceEngineUtils"/>
+    <classEntry path="com.reyco1.physinjector.engines.sliceengine.SliceData"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

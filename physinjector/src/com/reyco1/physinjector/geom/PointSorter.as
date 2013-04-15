@@ -5,25 +5,12 @@ package com.reyco1.physinjector.geom
 	import com.reyco1.physinjector.PhysInjector;
 	
 	import flash.utils.Dictionary;
+	import flash.geom.Point;
 
 	public class PointSorter
 	{
-		private static var center:Object;
+		private static var center:Point;
 		private static var points:Dictionary = new Dictionary();
-		
-		public static function sort(vertices:Array):Array
-		{
-			center = getMidpoint(vertices);
-			
-			for (var i:int = 0; i < vertices.length; ++i) 
-			{
-				vertices[i].angle = getRadian(vertices[i].x, vertices[i].y, center);
-			}
-			
-			vertices.sortOn("angle", Array.NUMERIC);
-			
-			return vertices;
-		}
 		
 		public static function parse(array:Array, id:String):Vector.<b2Vec2>
 		{
@@ -40,27 +27,86 @@ package com.reyco1.physinjector.geom
 			return points[id];
 		}
 		
-		private static function getMidpoint(group:Array):Object
+		public static function arrangeClockwise(vec:Vector.<b2Vec2>):Vector.<b2Vec2>
 		{
-			var p:Object = new Object();
+			var n:int = vec.length;
+			var d:Number;
+			var i1:int = 1;
+			var i2:int = n-1;
+			
+			var tempVec:Vector.<b2Vec2> = new Vector.<b2Vec2>(n);
+			var C:b2Vec2;
+			var D:b2Vec2;
+			
+			vec.sort(comp1);			
+			
+			tempVec[0] = vec[0];
+			C = vec[0];
+			D = vec[n-1];
+			
+			for(var i:int = 1; i<n-1; i++)
+			{
+				d = det(C.x, C.y, D.x, D.y, vec[i].x, vec[i].y);
+				if(d<0) 
+					tempVec[i1++] = vec[i];
+				else 
+					tempVec[i2--] = vec[i];
+			}
+			
+			tempVec[i1] = vec[n-1];
+			
+			return tempVec;
+		}
+		
+		public static function comp1(a:b2Vec2, b:b2Vec2):Number
+		{
+			if(a.x>b.x) 
+				return 1;
+			else if(a.x<b.x) 
+				return -1;			
+			return 0;
+		}
+		
+		public static function det(x1:Number, y1:Number, x2:Number, y2:Number, x3:Number, y3:Number):Number
+		{
+			return x1*y2+x2*y3+x3*y1-y1*x2-y2*x3-y3*x1;   
+		}
+		
+		public static function sort(vertices:Array):Array
+		{
+			center = getMidpoint(vertices);
+			
+			for (var i:int = 0; i < vertices.length; ++i) 
+			{
+				vertices[i].angle = getRadian(vertices[i].x, vertices[i].y, center);
+			}
+			
+			vertices.sortOn("angle", Array.NUMERIC);
+			
+			return vertices;
+		}
+		
+		public static function getMidpoint(groupArrayOrVetor:*):Point
+		{
+			var p:Point = new Point();
 			var globalEquivalent:Object;
 			var tempX:Number = 0;
 			var tempY:Number = 0;
 			
-			for(var a:int = 0; a<group.length; a++)
+			for(var a:int = 0; a<groupArrayOrVetor.length; a++)
 			{
-				globalEquivalent = {x:group[a].x, y:group[a].y};
+				globalEquivalent = {x:groupArrayOrVetor[a].x, y:groupArrayOrVetor[a].y};
 				tempX += globalEquivalent.x;
 				tempY += globalEquivalent.y;
 			}
 			
-			p.x = tempX / group.length;
-			p.y = tempY / group.length;			
+			p.x = tempX / groupArrayOrVetor.length;
+			p.y = tempY / groupArrayOrVetor.length;			
 			
 			return p;
 		}
 		
-		private static function getRadian (x2:Number, y2:Number, center:Object):Number
+		public static function getRadian (x2:Number, y2:Number, center:Object):Number
 		{
 			var dx:Number = center.x - x2;
 			var dy:Number = center.y - y2;

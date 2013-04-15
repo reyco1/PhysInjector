@@ -48,10 +48,10 @@ package com.reyco1.physinjector
 		private   var joints:Vector.<b2Joint>;
 		private   var bodyDestroyQueue:Vector.<Object>;
 		private   var jointDestroyQueue:Vector.<b2Joint>;
-		private   var stage:Stage;
 		private   var dragManager:DragManager;
 		private   var debugDrawManager:DebugDrawManager;
 		
+		public    var stage:Stage;
 		public    var juggler:Juggler;
 		public    var bodies:Vector.<b2Body>
 		public 	  var onContactBegin:Function;
@@ -170,7 +170,21 @@ package com.reyco1.physinjector
 					break;
 			}
 			
-			po = new PhysicsObject(b, displayObj, properties);
+			po = registerPhysicsObject(b, displayObj, properties);
+			
+			return po;
+		}
+		
+		/**
+		 * Registered a manually created PhysicsObject to the update queue 
+		 * @param b
+		 * @param displayObj
+		 * @param properties
+		 * 
+		 */		
+		public function registerPhysicsObject(b:b2Body, displayObj:*, properties:PhysicsProperties):PhysicsObject
+		{
+			var po:PhysicsObject = new PhysicsObject(b, displayObj, properties);
 			po.name = properties.name;
 			
 			b.SetUserData( po );
@@ -377,7 +391,7 @@ package com.reyco1.physinjector
 		 * @param j
 		 * 
 		 */		
-		private function destroyJoint(j:b2Joint):void 
+		public function destroyJoint(j:b2Joint):void 
 		{
 			WORLD.DestroyJoint( j );
 		}
@@ -437,6 +451,35 @@ package com.reyco1.physinjector
 			bodyHash	= null;
 		}
 		
+		/**
+		 * Disposes a physics object right away instead of adding it to the remove queue 
+		 * @param po
+		 * @param autoRemoveDisplayObject
+		 * 
+		 */		
+		public function quickDispose(po:PhysicsObject, autoRemoveDisplayObject:Boolean = false):void
+		{
+			var body:b2Body;
+			var dispObj:*;
+			var physObj:PhysicsObject;
+			
+			physObj = po;
+			dispObj = physObj.displayObject;
+			body    = physObj.body;
+			
+			delete bodyHash[ dispObj ];
+			
+			physObj.dispose();
+			destroyBody( bodies.splice(bodies.indexOf( body ), 1)[0] );
+			
+			if(autoRemoveDisplayObject)
+				dispObj.parent.removeChild( dispObj );
+			
+			body 		= null;
+			dispObj 	= null;
+			physObj 	= null;
+		}
+		
 		/* UPDATE */
 		
 		/**
@@ -457,33 +500,13 @@ package com.reyco1.physinjector
 				destroyJoint( jointDestroyQueue.splice(0, 1)[0] );
 			}
 			
-			var body:b2Body;
-			var dispObj:*;
-			var physObj:PhysicsObject;
-			var autoRemoveDisplayObject:Boolean;
-			var objRevmove:Object;
-			
+			var objRemove:Object;			
 			while(bodyDestroyQueue.length > 0)
 			{
-				objRevmove = bodyDestroyQueue.splice(0, 1)[0];
-				autoRemoveDisplayObject = objRevmove.autoRemove;
-				physObj = objRevmove.po;
-				dispObj = physObj.displayObject;
-				body    = physObj.body;
-				
-				delete bodyHash[ dispObj ];
-				
-				physObj.dispose();
-				destroyBody( bodies.splice(bodies.indexOf( body ), 1)[0] );
-				
-				if(autoRemoveDisplayObject)
-					dispObj.parent.removeChild( dispObj );
-			}
-			
-			body 		= null;
-			dispObj 	= null;
-			physObj 	= null;
-			objRevmove 	= null;
+				objRemove = bodyDestroyQueue.splice(0, 1)[0];
+				quickDispose(objRemove.po, objRemove.autoRemove);
+			}			
+			objRemove 	= null;
 			
 			if(dragManager)
 				dragManager.update();
