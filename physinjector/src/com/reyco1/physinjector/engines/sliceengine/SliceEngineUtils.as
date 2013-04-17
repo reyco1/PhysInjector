@@ -52,7 +52,7 @@ package com.reyco1.physinjector.engines.sliceengine
 		public static function createSlicedTexture(verticesVec:Vector.<b2Vec2>, texture:Bitmap):*
 		{
 			var sprite:*;
-			var container:*;
+			
 			if(!PhysInjector.STARLING)
 			{
 				var shape:Shape = new Shape();
@@ -70,14 +70,15 @@ package com.reyco1.physinjector.engines.sliceengine
 					shape.graphics.lineTo(verticesVec[i].x * PhysInjector.WORLD_SCALE, verticesVec[i].y * PhysInjector.WORLD_SCALE);
 				
 				shape.graphics.lineTo(verticesVec[0].x * PhysInjector.WORLD_SCALE, verticesVec[0].y * PhysInjector.WORLD_SCALE);
-				shape.graphics.endFill();
+				shape.graphics.endFill();				
 				
-				
+				/*
 				var center:Shape = new Shape();
 				center.graphics.lineStyle(1);
 				center.graphics.beginFill(0xFF0000);
 				center.graphics.drawCircle(0, 0, 3);
-				center.graphics.endFill();					
+				center.graphics.endFill();	
+				*/
 				
 				sprite = new Sprite();
 				sprite.addChild( shape );
@@ -86,6 +87,7 @@ package com.reyco1.physinjector.engines.sliceengine
 			{
 				throw new Error("As of this current version, the SliceEngine does not work with Starling.")
 			}
+			
 			return sprite;
 		}
 	}

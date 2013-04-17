@@ -28,6 +28,7 @@
     <classEntry path="com.reyco1.physinjector.engines.SliceEngine"/>
     <classEntry path="com.reyco1.physinjector.engines.sliceengine.SliceEngineUtils"/>
     <classEntry path="com.reyco1.physinjector.engines.sliceengine.SliceData"/>
+    <classEntry path="com.reyco1.physinjector.factory.EdgeFactory"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

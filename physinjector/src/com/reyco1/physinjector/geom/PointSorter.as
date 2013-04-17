@@ -3,14 +3,46 @@ package com.reyco1.physinjector.geom
 	import Box2D.Common.Math.b2Vec2;
 	
 	import com.reyco1.physinjector.PhysInjector;
+	import com.reyco1.physinjector.manager.Utils;
 	
-	import flash.utils.Dictionary;
 	import flash.geom.Point;
+	import flash.utils.Dictionary;
 
 	public class PointSorter
 	{
 		private static var center:Point;
-		private static var points:Dictionary = new Dictionary();
+		private static var points:Dictionary = new Dictionary();		
+		
+		public static function arrangeClockwise(vec:Vector.<b2Vec2>):Vector.<b2Vec2>
+		{
+			var n:int  = vec.length;
+			var i1:int = 1;
+			var i2:int = n-1;
+			var d:Number;
+			
+			var tempVec:Vector.<b2Vec2> = new Vector.<b2Vec2>(n);
+			var C:b2Vec2;
+			var D:b2Vec2;
+			
+			vec.sort(comp1);			
+			
+			tempVec[0] 	= vec[0];
+			C 			= vec[0];
+			D 			= vec[n-1];
+			
+			for(var i:int = 1; i<n-1; i++)
+			{
+				d = det(C.x, C.y, D.x, D.y, vec[i].x, vec[i].y);
+				if(d<0) 
+					tempVec[i1++] = vec[i];
+				else 
+					tempVec[i2--] = vec[i];
+			}
+			
+			tempVec[i1] = vec[n-1];
+			
+			return tempVec;
+		}
 		
 		public static function parse(array:Array, id:String):Vector.<b2Vec2>
 		{
@@ -25,37 +57,6 @@ package com.reyco1.physinjector.geom
 				points[id].push(new b2Vec2(array[a].x / PhysInjector.WORLD_SCALE, array[a].y / PhysInjector.WORLD_SCALE));
 			}
 			return points[id];
-		}
-		
-		public static function arrangeClockwise(vec:Vector.<b2Vec2>):Vector.<b2Vec2>
-		{
-			var n:int = vec.length;
-			var d:Number;
-			var i1:int = 1;
-			var i2:int = n-1;
-			
-			var tempVec:Vector.<b2Vec2> = new Vector.<b2Vec2>(n);
-			var C:b2Vec2;
-			var D:b2Vec2;
-			
-			vec.sort(comp1);			
-			
-			tempVec[0] = vec[0];
-			C = vec[0];
-			D = vec[n-1];
-			
-			for(var i:int = 1; i<n-1; i++)
-			{
-				d = det(C.x, C.y, D.x, D.y, vec[i].x, vec[i].y);
-				if(d<0) 
-					tempVec[i1++] = vec[i];
-				else 
-					tempVec[i2--] = vec[i];
-			}
-			
-			tempVec[i1] = vec[n-1];
-			
-			return tempVec;
 		}
 		
 		public static function comp1(a:b2Vec2, b:b2Vec2):Number
@@ -110,12 +111,7 @@ package com.reyco1.physinjector.geom
 		{
 			var dx:Number = center.x - x2;
 			var dy:Number = center.y - y2;
-			return degrees(Math.atan2(dy,dx));
-		}
-		
-		private static function degrees(radians:Number):Number
-		{
-			return radians * 180/Math.PI;
+			return Utils.radiansToDegrees(Math.atan2(dy,dx));
 		}
 	}
 }

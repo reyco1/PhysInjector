@@ -34,6 +34,7 @@ package com.reyco1.physinjector
 		public static var STARLING:Boolean   = false;
 		public static var WORLD_SCALE:Number = WorldVariables.WORLD_SCALE;
 		public static var WORLD:b2World		 = null;
+		public static var PAUSED:Boolean	 = false;
 		
 		public static const SQUARE:int   = 0;
 		public static const CIRCLE:int   = 1;
@@ -488,41 +489,44 @@ package com.reyco1.physinjector
 		 */		
 		public function update():void
 		{			
-			var delta:Number = 1 / (WorldVariables.DELTA * WorldVariables.BULLET_TIME_FACTOR);
-			var velocityIterations:Number = WorldVariables.VELOCITY_ITERATIONS * WorldVariables.BULLET_TIME_FACTOR;
-			var positionIterations:Number = WorldVariables.POSITION_ITERATIONS * WorldVariables.BULLET_TIME_FACTOR;
-			
-			WORLD.Step(delta, velocityIterations, positionIterations);
-			WORLD.ClearForces();			
-			
-			while(jointDestroyQueue.length > 0)
+			if(!PAUSED)
 			{
-				destroyJoint( jointDestroyQueue.splice(0, 1)[0] );
-			}
-			
-			var objRemove:Object;			
-			while(bodyDestroyQueue.length > 0)
-			{
-				objRemove = bodyDestroyQueue.splice(0, 1)[0];
-				quickDispose(objRemove.po, objRemove.autoRemove);
-			}			
-			objRemove 	= null;
-			
-			if(dragManager)
-				dragManager.update();
-			
-			for (var a:int = 0; a < bodies.length; a++) 
-			{
-				if(bodies[a].GetType() == b2Body.b2_dynamicBody && bodies[a].GetUserData() != null)
+				var delta:Number = 1 / (WorldVariables.DELTA * WorldVariables.BULLET_TIME_FACTOR);
+				var velocityIterations:Number = WorldVariables.VELOCITY_ITERATIONS * WorldVariables.BULLET_TIME_FACTOR;
+				var positionIterations:Number = WorldVariables.POSITION_ITERATIONS * WorldVariables.BULLET_TIME_FACTOR;
+				
+				WORLD.Step(delta, velocityIterations, positionIterations);
+				WORLD.ClearForces();			
+				
+				while(jointDestroyQueue.length > 0)
 				{
-					updateDisplayObjectPosition( bodies[a] );
+					destroyJoint( jointDestroyQueue.splice(0, 1)[0] );
 				}
+				
+				var objRemove:Object;			
+				while(bodyDestroyQueue.length > 0)
+				{
+					objRemove = bodyDestroyQueue.splice(0, 1)[0];
+					quickDispose(objRemove.po, objRemove.autoRemove);
+				}			
+				objRemove 	= null;
+				
+				if(dragManager)
+					dragManager.update();
+				
+				for (var a:int = 0; a < bodies.length; a++) 
+				{
+					if(bodies[a].GetType() == b2Body.b2_dynamicBody && bodies[a].GetUserData() != null)
+					{
+						updateDisplayObjectPosition( bodies[a] );
+					}
+				}
+				
+				if(debugDrawManager)
+					debugDrawManager.update();
+				
+				juggler.update();
 			}
-			
-			if(debugDrawManager)
-				debugDrawManager.update();
-			
-			juggler.update();
 		}
 	}
 }

@@ -27,7 +27,6 @@ package com.reyco1.physinjector.engines
 		private var lineStartEndPoints:Vector.<b2Vec2>;
 		private var intersecting:Boolean;
 		private var objectsWithEnterPoints:Vector.<PhysicsObject>;
-		private var id:int;
 		
 		public function SliceEngine(injector:PhysInjector)
 		{
@@ -184,12 +183,9 @@ package com.reyco1.physinjector.engines
 			
 			globalCenter = DynamicRegistration.getGlobalDisplayObjectCenter( data.slice );
 			
-			var x:Number = data.x;
-			var y:Number = data.y;
-			var rotation:Number = data.rotation;
-			data.slice.x = x;
-			data.slice.y =  y;
-			data.slice.rotation = rotation;
+			data.slice.x = data.x;
+			data.slice.y = data.y;
+			data.slice.rotation = data.rotation;
 			
 			var polyShape:b2PolygonShape = new b2PolygonShape();
 			polyShape.SetAsVector(data.vertices);			
