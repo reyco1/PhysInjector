@@ -1,3 +1,13 @@
+// =================================================================================================
+//
+//	PhysInjector
+//	Copyright 2013 ReycoGames All Rights Reserved.
+//
+//	This program is free software. You can redistribute and/or modify it
+//	in accordance with the terms of the accompanying license agreement.
+//
+// =================================================================================================
+
 package com.reyco1.physinjector.plugins
 {
 	import com.reyco1.physinjector.data.WorldVariables;

@@ -1,3 +1,13 @@
+// =================================================================================================
+//
+//	PhysInjector
+//	Copyright 2013 ReycoGames All Rights Reserved.
+//
+//	This program is free software. You can redistribute and/or modify it
+//	in accordance with the terms of the accompanying license agreement.
+//
+// =================================================================================================
+
 package com.reyco1.physinjector
 {
 	import Box2D.Common.Math.b2Vec2;
@@ -26,20 +36,20 @@ package com.reyco1.physinjector
 	
 	/**
 	 * Main class which gets the Box2D engine ready and started 
-	 * @author Reynaldo
+	 * @author reyco1
 	 * 
 	 */	
 	public class PhysInjector extends EventDispatcher implements IEventDispatcher
 	{
-		public static var STARLING:Boolean   = false;
-		public static var WORLD_SCALE:Number = WorldVariables.WORLD_SCALE;
-		public static var WORLD:b2World		 = null;
-		public static var PAUSED:Boolean	 = false;
+		public static var STARLING:Boolean   	= false;
+		public static var WORLD_SCALE:Number 	= WorldVariables.WORLD_SCALE;
+		public static var WORLD:b2World		 	= null;
+		public static var PAUSED:Boolean	 	= false;
 		
-		public static const SQUARE:int   = 0;
-		public static const CIRCLE:int   = 1;
-		public static const POLYGON:int  = 2;
-		public static const PHYSEDIT:int = 3;
+		public static const SQUARE:int   		= 0;
+		public static const CIRCLE:int   		= 1;
+		public static const POLYGON:int  		= 2;
+		public static const PHYSEDIT:int 		= 3;
 		
 		protected var defaultGravity:b2Vec2;
 		protected var contacts:ContactListener;

@@ -1,3 +1,13 @@
+// =================================================================================================
+//
+//	PhysInjector
+//	Copyright 2013 ReycoGames All Rights Reserved.
+//
+//	This program is free software. You can redistribute and/or modify it
+//	in accordance with the terms of the accompanying license agreement.
+//
+// =================================================================================================
+
 package com.reyco1.physinjector.engines
 {
 	import Box2D.Collision.Shapes.b2PolygonShape;
@@ -47,9 +57,9 @@ package com.reyco1.physinjector.engines
 		
 		public function intersect(points:Vector.<Point>):void
 		{
-			objectsWithEnterPoints = new Vector.<PhysicsObject>();
-			lineStartEndPoints = Utils.pointVectorTob2Vec2Vector( points );
-			intersecting = true;
+			objectsWithEnterPoints  = new Vector.<PhysicsObject>();
+			lineStartEndPoints 		= Utils.pointVectorTob2Vec2Vector( points );
+			intersecting 			= true;
 		}		
 		
 		private function update():void
@@ -59,8 +69,8 @@ package com.reyco1.physinjector.engines
 				PhysInjector.WORLD.RayCast(intersection, lineStartEndPoints[0], lineStartEndPoints[1]);
 				PhysInjector.WORLD.RayCast(intersection, lineStartEndPoints[1], lineStartEndPoints[0]);
 				
-				lineStartEndPoints = null;
-				intersecting = false;
+				lineStartEndPoints 	= null;
+				intersecting 		= false;
 			}
 		}
 		
@@ -93,11 +103,11 @@ package com.reyco1.physinjector.engines
 		
 		private function createSlices(affectedBody:PhysicsObject, A:b2Vec2, B:b2Vec2):void 
 		{
-			var verticesVec:Vector.<b2Vec2> = SliceEngineUtils.getVertices( affectedBody );
-			var numVertices:int = verticesVec.length;				
-			var shape1Vertices:Vector.<b2Vec2> = new Vector.<b2Vec2>();
-			var shape2Vertices:Vector.<b2Vec2> = new Vector.<b2Vec2>();
-			var parent:* = affectedBody.displayObject.parent;
+			var verticesVec:Vector.<b2Vec2> 	= SliceEngineUtils.getVertices( affectedBody );
+			var numVertices:int 				= verticesVec.length;				
+			var shape1Vertices:Vector.<b2Vec2> 	= new Vector.<b2Vec2>();
+			var shape2Vertices:Vector.<b2Vec2> 	= new Vector.<b2Vec2>();
+			var parent:* 						= affectedBody.displayObject.parent;
 			
 			A = affectedBody.body.GetLocalPoint(A);
 			B = affectedBody.body.GetLocalPoint(B);
@@ -160,11 +170,11 @@ package com.reyco1.physinjector.engines
 		
 		private function createSlice(data:Object):void
 		{
-			var properties:PhysicsProperties  = Definitions.createPhysicsPropertiesFromb2Body( data.body );			
-			var currentRotation:Number 	= 0;
-			var po:PhysicsObject		= null;
-			var globalCenter:Point		= null;
-			var b:b2Body				= null;
+			var properties:PhysicsProperties = Definitions.createPhysicsPropertiesFromb2Body( data.body );			
+			var currentRotation:Number 		 = 0;
+			var po:PhysicsObject			 = null;
+			var globalCenter:Point			 = null;
+			var b:b2Body					 = null;
 			
 			if(data.rotation != 0)
 			{
@@ -175,16 +185,16 @@ package com.reyco1.physinjector.engines
 			if(!properties)
 				properties = new PhysicsProperties();
 			
-			properties.virtualCenterRegPoint 	= DynamicRegistration.getRegistrationOffset( data.slice, new Point(0.5,0.5) );
-			properties.virtualTopLeftRegPoint 	= DynamicRegistration.getRegistrationOffset( data.slice, new Point(0,0) );
+			properties.virtualCenterRegPoint 	= DynamicRegistration.getRegistrationOffset( data.slice, new Point(0.5, 0.5) );
+			properties.virtualTopLeftRegPoint 	= DynamicRegistration.getRegistrationOffset( data.slice, new Point(0, 0) );
 			properties.angle 					= PhysInjector.STARLING ? currentRotation : Utils.degreesToRadians( currentRotation );
 			properties.virtualCenterRegPoint  	= new Point(0, 0);
 			properties.awake					= true;
 			
 			globalCenter = DynamicRegistration.getGlobalDisplayObjectCenter( data.slice );
 			
-			data.slice.x = data.x;
-			data.slice.y = data.y;
+			data.slice.x 		= data.x;
+			data.slice.y 		= data.y;
 			data.slice.rotation = data.rotation;
 			
 			var polyShape:b2PolygonShape = new b2PolygonShape();
@@ -209,9 +219,9 @@ package com.reyco1.physinjector.engines
 		{
 			injector.juggler.unsubscribe( update );	
 			
-			injector = null;
-			lineStartEndPoints = null;
-			objectsWithEnterPoints = null
+			injector 				= null;
+			lineStartEndPoints 		= null;
+			objectsWithEnterPoints 	= null
 		}
 	}
 }
