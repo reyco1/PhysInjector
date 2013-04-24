@@ -67,6 +67,9 @@ package com.reyco1.physinjector
 		public    var bodies:Vector.<b2Body>
 		public 	  var onContactBegin:Function;
 		public 	  var onContactEnd:Function;
+		public 	  var globalOffsetX:Number = 0;
+		public 	  var globalOffsetY:Number = 0;
+		
 		
 		/**
 		 * Prepares the Box2D initial setup 
@@ -237,8 +240,8 @@ package com.reyco1.physinjector
 			var physObject:PhysicsObject = PhysicsObject( body.GetUserData() ) as PhysicsObject;
 			var displayObject:* 		 = physObject.displayObject;
 			var localPosition:Point 	 = Utils.b2Vec2ToPoint( body.GetPosition() );
-			var newX:Number 			 = localPosition.x;
-			var newY:Number 			 = localPosition.y;
+			var newX:Number 			 = localPosition.x + globalOffsetX;
+			var newY:Number 			 = localPosition.y + globalOffsetY;
 			var newRotation:Number 		 = Utils.radiansToDegrees( body.GetAngle() );
 			
 			DynamicRegistration.move(displayObject,   physObject.physicsProperties.virtualCenterRegPoint, newX, newY)
